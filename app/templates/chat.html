@@ -1,0 +1,68 @@
+<html lang="en">
+    <head>
+        <title>Minimal websocket application</title>
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="867427487654-4o9ugpqmst50dscliec6d95mokh0k2j1.apps.googleusercontent.com">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+    </head>
+    <body style="font-size:120%">
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+        <script>
+            function onSignIn(googleUser) {
+                // Useful data for your client-side scripts:
+                var profile = googleUser.getBasicProfile();
+                console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                console.log("Name: " + profile.getName());
+                console.log("Image URL: " + profile.getImageUrl());
+                console.log("Email: " + profile.getEmail());
+                $.ajax({
+                    method: 'POST',
+                    url: '/googleauth',
+                    dataType: 'json',
+                    data: { idtoken: googleUser.getAuthResponse().id_token },
+                    contentType: 'application/x-www-form-urlencoded',
+                    done: function(resp) {
+                        console.log('Signed in as: ', resp);
+                    },
+                    fail: function() {
+                        console.log('Failed');
+                    }
+                });
+            }
+        </script>
+        <h1>WebSocket Example</h1>
+        <div id="conn_status">Not Connected</div>
+        <div id="placeholder" style="width:600px;height:300px;"></div>
+        <input id="cli" style="width:300px;padding:10px;font-size:120%;" />
+        <script type="text/javascript">
+            $(function() {
+                // Open up a connection to our server
+                var ws = new WebSocket("wss://localhost/chat/");
+                // What do we do when we get a message?
+                ws.onmessage = function(evt) {
+                    $("#placeholder").append('<p>' + evt.data + '</p>');
+                    $('#cli').css({border: 'inherit'});
+                };
+                // Just update our conn_status field with the connection status
+                ws.onopen = function(evt) {
+                    $('#conn_status').html('<b>Connected</b>');
+                };
+                ws.onerror = function(evt) {
+                    $('#conn_status').html('<b>Error</b>');
+                };
+                ws.onclose = function(evt) {
+                    $('#conn_status').html('<b>Closed</b>');
+                };
+                $('#cli').keypress(function(evt) {
+                    if (evt.which === 13) {
+                        $('#cli').css({border: '2px solid red'});
+                        ws.send(JSON.stringify({
+                            message: $(cli).val()
+                        }));
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
