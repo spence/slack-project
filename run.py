@@ -1,14 +1,10 @@
 #!/usr/bin/env python2.7
 """
-gevent socket server that handles both HTTP and WS events until it explodes.
+gevent socket server that handles both HTTP and WS events until it explodes!
 
-It would make sense to separate these, but since this is fast, we're going to
-experiment with it for now.
+It would make sense to separate these, but since this is fast and this isn't a
+complicated app, I'm leaving them.
 """
-
-# # Monkey patch python core socket libs
-# from gevent import monkey
-# monkey.patch_all()
 
 from app import app
 from app.chatserver import SlackChatServer

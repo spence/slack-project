@@ -16,34 +16,27 @@ class SlackChatServer(WebSocketApplication):
         We only need to validate during handshake since we're using TSL for our websocket
         connection (wss) and once a connection is made it is considered secure.
         """
-
-        import ipdb; ipdb.set_trace()
-
         origin = self.ws.origin
         if origin not in app.config['AUTH_ORIGINS']:
-            self.on_close('invalid location')
+            self.on_close('invalid origin: {}'.format(origin))
             self.ws.close()
-
-        # log "Some client connected (on {} from {})!".format(origin, client_ip)
 
     def on_message(self, message):
         if message is None:
             return
 
-        current_client = self.ws.handler.active_client
-
         try:
             data = json.loads(message)
         except ValueError as exception:
             app.handle_exception(exception)
-            current_client.ws.send(json.dumps({
+            self.ws.send(json.dumps({
                 'error': True,
                 'message': 'Unable to parse request',
             }))
 
         method = data.get('method')
         if method is None:
-            current_client.ws.send(json.dumps({
+            self.ws.send(json.dumps({
                 'error': True,
                 'message': 'Missing "method"',
             }))
@@ -75,4 +68,5 @@ class SlackChatServer(WebSocketApplication):
             }))
 
     def on_close(self, reason):
-        print "Connection closed! "
+        # print "Connection closed! "
+        pass
