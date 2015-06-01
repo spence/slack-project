@@ -2,16 +2,8 @@
 App init module
 """
 
-import os
-import newrelic.agent
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-
-# Base app dir
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-# NewRelic for debugging
-newrelic.agent.initialize(os.path.join(BASE_DIR, '..', 'newrelic.ini'), 'Slack')
 
 # Define global flask app object
 app = Flask(__name__)

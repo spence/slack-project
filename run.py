@@ -6,14 +6,13 @@ It would make sense to separate these, but since this is fast, we're going to
 experiment with it for now.
 """
 
-# Monkey patch python core socket libs
-from gevent import monkey
-monkey.patch_all()
+# # Monkey patch python core socket libs
+# from gevent import monkey
+# monkey.patch_all()
 
 from app import app
 from app.chatserver import SlackChatServer
 from geventwebsocket import WebSocketServer, Resource
-
 
 WebSocketServer(
 
