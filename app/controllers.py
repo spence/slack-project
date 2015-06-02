@@ -11,7 +11,7 @@ mod_root = Blueprint('root', __name__)
 
 @mod_root.route('/', methods=['GET'])
 def root():
-    return render_template('chat.html')
+    return render_template('index.html')
 
 
 @mod_root.route('/googleauth', methods=['POST'])

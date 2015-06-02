@@ -16,3 +16,7 @@ sudo nginx -c $PWD/nginx.osx.conf
 # Stop
 sudo nginx -s stop
 ```
+
+```
+npm install
+```
