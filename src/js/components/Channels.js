@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default class Channels extends Component {
 
-  render() {
+  render () {
     return (
       <div id="channels"></div>
     );

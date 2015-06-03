@@ -15,7 +15,7 @@ WebSocketServer(
     ('0.0.0.0', 8000),
 
     Resource({
-        '^/chat': SlackChatServer,
+        '^/chat/': SlackChatServer,
         '^/.*': app
     }),
 

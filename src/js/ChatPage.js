@@ -5,9 +5,9 @@ import LoadingZone from './components/LoadingZone';
 
 export default class ChatPage extends Component {
 
-  state = { loading: true };
+  state = { loading: true }
 
-  render() {
+  render () {
     return (
       <div>
         { this.state.loading ? <LoadingZone /> : null }

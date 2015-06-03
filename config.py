@@ -17,8 +17,6 @@ GAUTH_CLIENT_ID = '867427487654-4o9ugpqmst50dscliec6d95mokh0k2j1.apps.googleuser
 AUTH_DOMAIN_NAMES = ['localhost', 'slack.projects.spencercreasey.com']
 AUTH_ORIGINS = [
     'https://localhost',
-    'http://localhost:8000',
-    'http://localhost:8080',
     'https://slack.projects.spencercreasey.com'
 ]
 

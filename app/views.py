@@ -65,4 +65,4 @@ def gauth_signin():
     # app.open_session(request)
     # Get CSRFtoken
 
-    return json.jsonify(user=user_id, auth_token='rand', status='success')
+    return json.jsonify(user_id=user_id, auth_token='rand', status='success')

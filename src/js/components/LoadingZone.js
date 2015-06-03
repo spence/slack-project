@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 
 export default class LoadingZone extends Component {
 
-  state = { dots: '' };
+  state = { dots: '' }
 
-  componentDidMount() {
+  componentDidMount () {
     this.timer = setInterval(() => { this.tickdots(this.state.dots); }, 500);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     clearInterval(this.timer);
   }
 
-  tickdots(dots) {
+  tickdots (dots) {
     this.setState({ dots: '...'.slice(2 - dots.length) });
   }
 
-  render() {
+  render () {
     return (
       <div id="loading-zone">
         <div id="loading_welcome">

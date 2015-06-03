@@ -23,20 +23,21 @@ class User(Base):
     """
     User table.
 
-    Identified only by authentication ID. Profile information is fetched from 3rd parties.
+    Identified by authentication ID. Profile information is fetched from 3rd parties.
     """
     __tablename__ = 'user'
 
-    # Auth ID (e.g., Google)
+    # External Unique ID (e.g., Google Profile ID)
+    # NB: Would be wise to store auth type as a pair if we support more than 1 type of auth
     auth_id = db.Column(db.String(120), unique=True)
 
     # User's title
     title = db.Column(db.String(120))
 
     # User's @name (would be composite with Account if we were supporting that)
-    user_id = db.Column(db.String(120), unique=True)
+    username = db.Column(db.String(120), unique=True)
 
-    # Denormed profile data taken from their Google Profile. This could be moved into separate table.
+    # Cached profile data taken from their Google Profile. This could be moved into separate table.
     # - read-only (updated on last login)
     # - could be used for offline things like newsletters, change of license
     name = db.Column(db.String(120))  # just truncate the rest

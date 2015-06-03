@@ -1,57 +1,68 @@
 import React, { Component } from 'react';
+import AuthStore from './stores/AuthStore';
+import Actions from './actions/ActionCreators';
 
-export default class LoginApp extends Component {
+export default class LoginPage extends Component {
 
-  handleClick(event) {
-    gapi.auth.signIn();
-    // {
-    //   'callback': (authResult) => {
-    //     console.log(authResult)
-    //     // if (authResult['status']['signed_in']) {
-    //     //   console.log('ok!');
-    //     // }
-    //   }
-    // });
+  componentDidMount () {
+    AuthStore.addChangeListener(() => { this.onUserChange(); });
+  }
 
-    // auth2.signIn({'redirect_uri': 'postmessage'}).then((authResult) => {
-    //   if (authResult['code']) {
-    //     $.ajax({
-    //       method: 'POST',
-    //       url: '/googleauth',
-    //       contentType: 'application/octet-stream; charset=utf-8',
-    //       data: { idtoken: googleUser.getAuthResponse().id_token },
-    //       processData: false,
-    //       done: function(resp) {
-    //           console.log('Signed in as: ', resp);
-    //       },
-    //       fail: function() {
-    //           console.log('Failed');
-    //       }
-    //     });
-    //   }
-    // });
+  componentWillUnmount () {
+    AuthStore.removeChangeListener(() => { this.onUserChange(); });
+  }
+
+  onUserChange () {
+    var error = false;
+    var profile = AuthStore.getUserProfile();
+    if (!profile) {
+      error = true;
+    }
+    this.setState({
+      authError: error,
+      loading: false,
+      userProfile: profile
+    });
+    console.log(profile);
+  }
+
+  state = {
+    authError: false,
+    loading: false,
+    userProfile: null
   }
 
   render() {
+
+    let handleClick = () => {
+      this.state.authError = false;
+      this.state.loading = true;
+      Actions.authenticateUser();
+    };
+
     return (
       <div className="login">
         <header>
           <a href="https://slack.projects.spencercreasey.com/" id="header_logo"><img src="/static/images/not_slack_logo.png" /></a>
           <div className="header_nav">
             <div className="header_links float_right">
-              <a href="/is">Tour</a>
-              <a href="http://slackhq.com" target="new">Blog</a>
-              <a href="http://twitter.com/@slackhq" target="new">Twitter</a>
+              <a href="http://spencercreasey.com" target="new">Blog</a>
+              <a href="http://twitter.com/@spencercreasey" target="new">Twitter</a>
             </div>
           </div>
         </header>
         <div id="page">
           <div id="page_contents">
+            {this.state.authError ?
+              <p className="alert alert_error">
+                <i className="ts_icon ts_icon_warning"></i> Failure during authenticating. Please try again
+              </p> : null
+            }
             <div className="real_content card align_center span_4_of_6 col float_none margin_auto large_bottom_margin right_padding">
               <h1> Sign in to <span className="break_word">slack.projects.spencercreasey.com</span></h1>
               <div className="col span_4_of_6 float_none margin_auto large_bottom_margin">
                 <p>
-                  <button id="signin_btn" type="submit" onClick={this.handleClick}
+                  <button id="signin_btn" type="submit" onClick={handleClick} disabled={this.state.loading}
                           className="btn btn_large full_width ladda-button" data-style="expand-right">
                     <span className="ladda-label">Sign in with Google</span>
                     <span className="ladda-spinner"></span>

@@ -7,8 +7,22 @@
 @font-face{font-family:Lato;font-style:italic;font-weight:700;src:local('☺'),url(/static/fonts/lato-italic-bold.woff) format('woff')}
 @font-face{font-family:Lato;font-style:italic;font-weight:900;src:local('☺'),url(/static/fonts/lato-italic-black.woff) format('woff')}
 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 /*** Login page ***/
 
+@media only screen and (min-width: 1024px)
+.login #page_contents {
+  width: 1024px;
+}
+.login #page_contents {
+  margin: 0 auto;
+  padding: 8rem 2rem;
+}
 .login {
   font-family: 'Emoji Passthrough',Lato,appleLogo,sans-serif;
   text-rendering: optimizeLegibility;
@@ -16,6 +30,9 @@
   -moz-osx-font-smoothing: grayscale;
   color: #555459;
   line-height: 1.5rem;
+  background: #F9F9F9;
+  font-size: 18px;
+  height: 100%;
 }
 .login h1 {
   font-size: 2rem;
@@ -27,8 +44,24 @@
   font-family: Lato,appleLogo,sans-serif;
   margin: 0 0 1rem;
 }
+.login .alert.alert_error {
+  border-left-color: #CB5234;
+}
+.login .alert {
+  padding: .75rem 1rem .75rem 3rem;
+  border: 1px solid #E8E8E8;
+  background: #FFF;
+  color: #555459;
+  border-left-width: 5px;
+  margin: 0 auto 1rem;
+  border-radius: .25rem;
+  width: 66.13%;
+}
 .login .break_word {
   word-wrap: break-word;
+}
+.login .real_content, .login .alert.alert_error {
+  max-width: 644px;
 }
 .login header {
   background: #FFF;
@@ -179,7 +212,6 @@
   opacity: 0;
   pointer-events: none;
 }
-
 .login .span_4_of_6 {
   width: 66.13%;
 }
