@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import AuthStore from './stores/AuthStore';
 import Actions from './actions/ActionCreators';
 
 export default class LoginPage extends Component {
+
+  static contextTypes = {
+    router: PropTypes.func.isRequired
+  }
 
   componentDidMount () {
     AuthStore.addChangeListener(() => { this.onUserChange(); });
@@ -24,6 +28,10 @@ export default class LoginPage extends Component {
       userProfile: profile
     });
     console.log(profile);
+    if (profile) {
+      var { router } = this.context;
+      router.transitionTo('/');
+    }
   }
 
   state = {
@@ -34,6 +42,14 @@ export default class LoginPage extends Component {
 
   render() {
 
+    // Check for logged-in user and redirect
+    var profile = AuthStore.getUserProfile();
+    if (profile) {
+      var { router } = this.context;
+      router.transitionTo('/');
+    }
+
+    // Trigger Google Profile login
     let handleClick = () => {
       this.state.authError = false;
       this.state.loading = true;
@@ -59,7 +75,7 @@ export default class LoginPage extends Component {
               </p> : null
             }
             <div className="real_content card align_center span_4_of_6 col float_none margin_auto large_bottom_margin right_padding">
-              <h1> Sign in to <span className="break_word">slack.projects.spencercreasey.com</span></h1>
+              <h1> Sign in to <span className="break_word">slack-project</span></h1>
               <div className="col span_4_of_6 float_none margin_auto large_bottom_margin">
                 <p>
                   <button id="signin_btn" type="submit" onClick={handleClick} disabled={this.state.loading}
