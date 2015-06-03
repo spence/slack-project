@@ -15,7 +15,7 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 # Regster routes
-from controllers import mod_root
+from views import mod_root
 app.register_blueprint(mod_root)
 
 # Create the DB models
