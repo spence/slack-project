@@ -13,22 +13,21 @@ var watchify = require('watchify');
 var conf = {
   JS_ENTRY: './src/js/entry.js',
   CSS_PATTERN: './src/css/**/*.css',
-  HTML_SRC: './src/index.html',
-  STATIC_DIR: './app/static/',
+  ASSET_PATTERN: './src/assets/**/*',
+  STATIC_DIR: './dist/',
   JS_BUNDLE: 'app.js',
-  CSS_BUNDLE: 'app.css',
-  HTML_DEST: './app/static/index.html'
+  CSS_BUNDLE: 'app.css'
 };
 
 gulp.task('watch', function() {
-  // gulp.watch(conf.HTML_SRC, ['static']);
+  gulp.watch(conf.ASSET_PATTERN, ['static']);
   gulp.watch(conf.CSS_PATTERN, ['css']);
 });
 
-// gulp.task('static', function() {
-//   return gulp.src(conf.HTML_SRC)
-//   .pipe(gulp.dest(conf.STATIC_DIR));
-// });
+gulp.task('static', function() {
+  return gulp.src(conf.ASSET_PATTERN)
+  .pipe(gulp.dest(conf.STATIC_DIR));
+});
 
 gulp.task('css', function () {
   return gulp.src(conf.CSS_PATTERN)
@@ -62,7 +61,7 @@ gulp.task('build', function() {
 });
 
 gulp.task('default', [
-  // 'static',
+  'static',
   'build',
   'css',
   'watch'
