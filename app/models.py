@@ -2,7 +2,32 @@
 Models for our chat room.
 """
 
-from app import db
+import hashlib
+
+from app import db, app
+
+
+def init_db():
+    if Channel.query.count() == 0:
+        slackbot = User(
+            auth_id='',
+            title='Bot',
+            username='slackbot',
+            name='Slack Bot',
+            email='screasey@gmail.com',
+            image_url='https://{}/static/images/slackbot_48.png'.format(app.config['AUTH_DOMAIN'])
+        )
+        db.session.add(slackbot)
+        general_channel = Channel(
+            name='general',
+            owner=slackbot,
+            description='',
+            private=False,
+            direct=False,
+        )
+        db.session.add(general_channel)
+        db.session.commit()
+
 
 class Base(db.Model):
     """
@@ -10,13 +35,20 @@ class Base(db.Model):
     (copied from https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications)
     """
 
-    __abstract__  = True
+    __abstract__ = True
     __table_args__ = {'extend_existing': True}
 
-    id            = db.Column(db.Integer, primary_key=True)
-    date_created  = db.Column(db.DateTime,  default=db.func.current_timestamp())
-    date_modified = db.Column(db.DateTime,  default=db.func.current_timestamp(),
-                                           onupdate=db.func.current_timestamp())
+    id = db.Column(db.Integer, primary_key=True)
+    date_created  = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
+                              onupdate=db.func.current_timestamp())
+
+
+subscription_table = db.Table(
+    'channelsubscription', Base.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('channel_id', db.Integer, db.ForeignKey('channel.id'))
+)
 
 
 class User(Base):
@@ -44,22 +76,13 @@ class User(Base):
     email = db.Column(db.String(254))  # RFC-5321
     image_url = db.Column(db.String(2083))  # IE max
 
+    created = db.relationship('Channel', backref='owner')
+    channels = db.relationship('Channel', secondary=subscription_table, backref='users')
+    messages = db.relationship('Message', backref='user')
+
     # Helpful for debugging
     def __repr__(self):
         return '<User %r>' % self.name
-
-
-# class UserPreference(Base):
-
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-#     user = db.relationship('User', backref=db.backref('preferences', lazy='dynamic'))
-
-#     key = db.Column(db.String(50), primary_key=True)
-#     value = db.Column(db.String(150))
-
-#     # Helpful for debugging
-#     def __repr__(self):
-#         return '<Preference %r>' % self.key
 
 
 class Channel(Base):
@@ -70,12 +93,10 @@ class Channel(Base):
     """
     __tablename__ = 'channel'
 
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
     # This is unique since we're not doing accounts (it would then be composite)
     name = db.Column(db.String(80), unique=True)
-
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    owner = db.relationship('user', backref=db.backref('created', lazy='dynamic'))
-
     description = db.Column(db.String(256))
 
     # We're denorming this into two separate values for simplier queries. An argument could
@@ -89,7 +110,7 @@ class Channel(Base):
         return '<Channel {}>'.format(self.name)
 
 
-class ChannelMessage(Base):
+class Message(Base):
     """
     Tracks all the messages within a channel.
 
@@ -100,16 +121,12 @@ class ChannelMessage(Base):
     or mysql DB (or they're in trouble). Check out Kyles's series on this for some fun reading
     https://aphyr.com/tags/jepsen
     """
-    __tablename__ = 'channelmessage'
+    __tablename__ = 'message'
 
     channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'))
-    channel = db.relationship('channel', backref=db.backref('messages', lazy='dynamic'))
-
-    channel_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('user', backref=db.backref('said', lazy='dynamic'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     timestamp = db.Column(db.DateTime)
-
     message = db.Column(db.Text)
 
     # Helpful for debugging
@@ -117,24 +134,3 @@ class ChannelMessage(Base):
         # Allow 30 characters
         message = self.message if len(self.message) <= 30 else '{}...'.format(self.message[:27])
         return '<Message {}>'.format(message)
-
-
-class ChannelSubscription(db.Model):
-    """
-    Many-to-Many between Users and Channels.
-
-    Exists only when the user is subscribed (will not track history).
-
-    NB: This does not inherit from Base since we don't need additional meta.
-    """
-    __tablename__ = 'channelsubscription'
-
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    user = db.relationship('user', backref=db.backref('channels', lazy='dynamic'))
-
-    channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'), primary_key=True)
-    channel = db.relationship('channel', backref=db.backref('users', lazy='dynamic'))
-
-    # Helpful for debugging
-    def __repr__(self):
-        return '<Subscription {}:{}>'.format(self.user, self.channel)

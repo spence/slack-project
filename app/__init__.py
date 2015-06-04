@@ -20,3 +20,7 @@ app.register_blueprint(mod_root)
 
 # Create the DB models
 db.create_all()
+
+# Add default data
+from models import init_db
+init_db()
