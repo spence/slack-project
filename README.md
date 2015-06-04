@@ -17,6 +17,18 @@ sudo nginx -c $PWD/nginx.osx.conf
 sudo nginx -s stop
 ```
 
+Setup react app dependancies
 ```
 npm install
+```
+
+Setup nginx locations
+```bash
+
+# Setup base nginx location
+sudo ln -s $PWD /slack-project-www
+sudo chown www:www /slack-project-www
+
+# Map SSL cert dir
+ln -s ../ssl-certificates certificates
 ```
