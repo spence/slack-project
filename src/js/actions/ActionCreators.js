@@ -7,6 +7,12 @@ export default {
     Dispatcher.dispatch({
       actionType: Constants.ActionTypes.AUTH_USER
     });
+  },
+
+  connectChat () {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.CONNECT_CHAT
+    });
   }
 
 };
