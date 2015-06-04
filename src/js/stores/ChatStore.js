@@ -4,7 +4,6 @@ import Dispatcher from '../dispatcher/Dispatcher';
 import Constants from '../constants/Constants';
 import WebSocketRPC from '../utils/WebSocketRPC';
 
-
 let rpc = new WebSocketRPC('wss://slack.projects.spencercreasey.com/chat/');
 
 /**

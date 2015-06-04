@@ -28,7 +28,6 @@ export default class ChatPage extends Component {
       connected: ChatStore.isConnected(),
       connecting: ChatStore.isConnecting()
     });
-    console.log(this.state);
   }
 
   render () {
