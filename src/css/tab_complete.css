@@ -1,0 +1,111 @@
+@font-face{font-family:'Emoji Passthrough';src:url(/static/fonts/emoji-passthrough.woff) format('woff');font-weight:400;unicode-range:U+1F300-1F5FF,U+1F600-1F64F,U+1F680-1F6FF,U+2600-26FF}
+@font-face{font-family:appleLogo;src:local("Lucida Grande");unicode-range:U+F8FF}
+.helvetica{font-family:'Emoji Passthrough',"Helvetica Neue",Helvetica,"Segoe UI",Tahoma,Arial,sans-serif}
+.lato_black{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:900}
+.lato_bold{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:700}
+.lato_regular{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:500}
+.monospace{font-family:'Emoji Passthrough',Monaco,Menlo,Consolas,"Courier New",monospace!important}
+@-webkit-keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+@-moz-keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+@keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+.transparent{color:transparent!important}
+.neutral_white{color:#fff!important}
+.neutral_white_bg{background-color:#fff!important}
+.neutral_grey{color:#fbfbfa!important}
+.indifferent_grey{color:#555459!important}
+.indifferent_grey_bg{background-color:#555459!important}
+.charcoal_grey{color:#434245!important}
+.subtle_silver{color:#9e9ea6!important}
+.subtle_silver_bg{background-color:#9e9ea6!important}
+.soft_grey{color:#e8e8e8!important}
+.soft_grey_bg{background-color:#e8e8e8!important}
+.severe_grey{color:#3d3c40!important}
+.severe_grey_bg{background-color:#3d3c40!important}
+.dull_grey{color:#8b898f!important}
+.dull_grey_bg{background-color:#8b898f!important}
+.cloud_silver{color:#babbbf!important}
+.cloud_silver_bg{background-color:#babbbf!important}
+.warm_white{color:#fbfaf8!important}
+.warm_white_bg{background-color:#fbfaf8!important}
+.cloud_white{color:#f2f2f5!important}
+.cloud_white_bg{background-color:#f2f2f5!important}
+.seafoam_green{color:#2ab27b!important}
+.seafoam_green_bg{background-color:#2ab27b!important}
+.clear_blue{color:#439fe0!important}
+.clear_blue_bg{background-color:#439fe0!important}
+.solid_blue{color:#2780f8!important}
+.solid_blue_bg{background-color:#2780f8!important}
+.candy_red{color:#eb4d5c!important}
+.candy_red_bg{background-color:#eb4d5c!important}
+.highlight_yellow_bg{background-color:#fffce0!important}
+.mention_yellow_bg{background-color:#fff3b8!important}
+.star_yellow{color:#fc0!important}
+.star_yellow_bg{background-color:#fc0!important}
+.yolk_orange{color:#edb431!important}
+.yolk_orange_bg{background-color:#edb431!important}
+.thrills_purple{color:#7d60c5!important}
+.burnt_violet{color:#4d394b!important}
+.burnt_violet_bg{background-color:#4d394b!important}
+.ocean_teal{color:#4c9689!important}
+.ocean_teal_bg{background-color:#4c9689!important}
+.havana_blue{color:#2a80b9!important}
+.havana_blue_bg{background-color:#2a80b9!important}
+.pale_blue{color:#f0f7fb!important}
+.pale_blue_bg{background-color:#f0f7fb!important}
+.sky_blue{color:#439fe0!important}
+.sky_blue_bg{background-color:#439fe0!important}
+.slate_blue{color:#3c4b5b!important}
+.slate_blue_bg{background-color:#3c4b5b!important}
+.muddy_lilac{color:#937e91!important}
+.muddy_lilac_bg{background-color:#937e91!important}
+.moscow_red,.moscow_red_on_hover:hover{color:#cb5234!important}
+.moscow_red_bg{background-color:#cb5234!important}
+.moscow_red_dark{color:#870000!important}
+.moscow_red_dark_bg{background-color:#870000!important}
+.mustard_yellow{color:#dfa941!important}
+.mustard_yellow_bg{background-color:#dfa941!important}
+.kelly_green{color:#36a64f!important}
+.kelly_green_dark{color:#257337!important}
+.kelly_green_bg{background-color:#36a64f!important}
+.channel_page_blue{color:#2d9cf5!important}
+.pin_orange{color:#ff876d!important}
+.dropbox_blue{color:#007ee5!important}
+.dropbox_blue_bg{background-color:#007ee5!important}
+.twitter_blue{color:#55acee!important}
+.twitter_blue_bg{background-color:#55acee!important}
+.gdrive_blue_bg{background-color:#4285f4!important}
+.screenhero_blue{color:#1a9cdb!important}
+.screenhero_blue_bg{background-color:#1a9cdb!important}
+.loading .tab_complete_ui{display:none}
+.tab_complete_ui{position:absolute;background:#fff;z-index:100000;padding:0;line-height:1.4rem;border-radius:.25rem;box-shadow:0 1px 15px rgba(64,54,63,.25);border:1px solid #DDD;min-width:300px}
+.tab_complete_ui .tab_complete_ui_scroller{max-height:454px;overflow-y:auto;overflow-x:hidden}
+.tab_complete_ui .tab_complete_ui_header{padding:5px 10px 4px;background:padding-box #FaF8F6;color:#7F7F83;font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-size:12px;border-bottom:1px solid #f2f2f5;text-shadow:0 1px #fff;border-radius:.25rem .25rem 0 0}
+.tab_complete_ui .tab_complete_ui_header .header_help{float:right}
+@media screen and (max-width:1200px){.tab_complete_ui .tab_complete_ui_header .header_help{display:none}
+}
+.tab_complete_ui.narrow .header_help,.tab_complete_ui.narrow .not_in_channel{display:none}
+.tab_complete_ui ul{list-style-type:none;margin:0}
+.tab_complete_ui ul.type_emoji{padding:3px 8px 5px}
+.tab_complete_ui ul.type_emoji li{display:inline-block;padding:3px 7px 3px 8px;margin:0 1px;line-height:.8rem;border-radius:1rem;color:#797979;border-bottom:1px solid transparent}
+.tab_complete_ui ul.type_members .member_image{margin-right:.4rem;margin-top:-2px;vertical-align:middle}
+.tab_complete_ui ul.type_members .broadcast,.tab_complete_ui ul.type_members .username{font-weight:900;margin-right:.4rem}
+.tab_complete_ui ul.type_members .broadcast_info,.tab_complete_ui ul.type_members .realname{margin-right:.4rem;color:#9e9ea6}
+.tab_complete_ui ul.type_cmds li{display:table;width:100%}
+.tab_complete_ui ul.type_cmds li .cmd-left-td{display:table-cell;white-space:nowrap;padding-right:15px}
+.tab_complete_ui ul.type_cmds li .cmd-right-td{display:table-cell;text-align:right;padding-right:15px}
+.tab_complete_ui ul.type_cmds .cmdname{font-weight:900}
+.tab_complete_ui ul.type_cmds .cmddesc{font-style:italic;font-weight:300}
+.tab_complete_ui ul.type_channels .channelname{font-weight:900}
+.tab_complete_ui ul.type_channels .channelname .hash{font-weight:300;margin-right:1px}
+.tab_complete_ui ul.type_channels .topic .emoji-sizer{font-size:1rem;line-height:1rem}
+.tab_complete_ui li.tab_complete_ui_item{border:0;cursor:pointer;background:0 0;padding:3px 10px 2px;font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-size:.9rem;border-bottom:1px solid #fff;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tab_complete_ui li.tab_complete_ui_item.active{background:#439fe0;color:#fff!important;border-bottom-color:#2a80b9;text-shadow:0 1px rgba(0,0,0,.1)}
+.tab_complete_ui li.tab_complete_ui_item.active span{color:#fff!important}
+.tab_complete_ui li.tab_complete_ui_item .emoji-sizer{font-size:1rem;line-height:14px}
+.tab_complete_ui .not_in_channel{color:#babbbf;font-size:.7rem}

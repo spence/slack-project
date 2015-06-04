@@ -1,0 +1,97 @@
+@font-face{font-family:appleLogo;src:local("Lucida Grande");unicode-range:U+F8FF}
+.helvetica{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Tahoma,Arial,sans-serif}
+.lato_black{font-family:Lato,appleLogo,sans-serif;font-weight:900}
+.lato_bold{font-family:Lato,appleLogo,sans-serif;font-weight:700}
+.lato_regular{font-family:Lato,appleLogo,sans-serif;font-weight:500}
+.monospace{font-family:Monaco,Menlo,Consolas,"Courier New",monospace!important}
+@-webkit-keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+@-moz-keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+@keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+.transparent{color:transparent!important}
+.neutral_white{color:#fff!important}
+.neutral_white_bg{background-color:#fff!important}
+.neutral_grey{color:#fbfbfa!important}
+.indifferent_grey{color:#555459!important}
+.indifferent_grey_bg{background-color:#555459!important}
+.charcoal_grey{color:#434245!important}
+.subtle_silver{color:#9e9ea6!important}
+.subtle_silver_bg{background-color:#9e9ea6!important}
+.soft_grey{color:#e8e8e8!important}
+.soft_grey_bg{background-color:#e8e8e8!important}
+.severe_grey{color:#3d3c40!important}
+.severe_grey_bg{background-color:#3d3c40!important}
+.dull_grey{color:#8b898f!important}
+.dull_grey_bg{background-color:#8b898f!important}
+.cloud_silver{color:#babbbf!important}
+.cloud_silver_bg{background-color:#babbbf!important}
+.warm_white{color:#fbfaf8!important}
+.warm_white_bg{background-color:#fbfaf8!important}
+.cloud_white{color:#f2f2f5!important}
+.cloud_white_bg{background-color:#f2f2f5!important}
+.seafoam_green{color:#2ab27b!important}
+.seafoam_green_bg{background-color:#2ab27b!important}
+.clear_blue{color:#439fe0!important}
+.clear_blue_bg{background-color:#439fe0!important}
+.solid_blue{color:#2780f8!important}
+.solid_blue_bg{background-color:#2780f8!important}
+.candy_red{color:#eb4d5c!important}
+.candy_red_bg{background-color:#eb4d5c!important}
+.highlight_yellow_bg{background-color:#fffce0!important}
+.mention_yellow_bg{background-color:#fff3b8!important}
+.star_yellow{color:#fc0!important}
+.star_yellow_bg{background-color:#fc0!important}
+.yolk_orange{color:#edb431!important}
+.yolk_orange_bg{background-color:#edb431!important}
+.thrills_purple{color:#7d60c5!important}
+.burnt_violet{color:#4d394b!important}
+.burnt_violet_bg{background-color:#4d394b!important}
+.ocean_teal{color:#4c9689!important}
+.ocean_teal_bg{background-color:#4c9689!important}
+.havana_blue{color:#2a80b9!important}
+.havana_blue_bg{background-color:#2a80b9!important}
+.pale_blue{color:#f0f7fb!important}
+.pale_blue_bg{background-color:#f0f7fb!important}
+.sky_blue{color:#439fe0!important}
+.sky_blue_bg{background-color:#439fe0!important}
+.slate_blue{color:#3c4b5b!important}
+.slate_blue_bg{background-color:#3c4b5b!important}
+.muddy_lilac{color:#937e91!important}
+.muddy_lilac_bg{background-color:#937e91!important}
+.moscow_red,.moscow_red_on_hover:hover{color:#cb5234!important}
+.moscow_red_bg{background-color:#cb5234!important}
+.moscow_red_dark{color:#870000!important}
+.moscow_red_dark_bg{background-color:#870000!important}
+.mustard_yellow{color:#dfa941!important}
+.mustard_yellow_bg{background-color:#dfa941!important}
+.kelly_green{color:#36a64f!important}
+.kelly_green_dark{color:#257337!important}
+.kelly_green_bg{background-color:#36a64f!important}
+.channel_page_blue{color:#2d9cf5!important}
+.pin_orange{color:#ff876d!important}
+.dropbox_blue{color:#007ee5!important}
+.dropbox_blue_bg{background-color:#007ee5!important}
+.twitter_blue{color:#55acee!important}
+.twitter_blue_bg{background-color:#55acee!important}
+.gdrive_blue_bg{background-color:#4285f4!important}
+.screenhero_blue{color:#1a9cdb!important}
+.screenhero_blue_bg{background-color:#1a9cdb!important}
+#fs_modal_bg{position:fixed;top:100%;right:0;bottom:0;left:0;background:rgba(0,0,0,.7);z-index:1000;opacity:0;-webkit-transition:opacity 750ms cubic-bezier(.2,.85,.5,1),top 0ms linear 750ms;-moz-transition:opacity 750ms cubic-bezier(.2,.85,.5,1),top 0ms linear 750ms;transition:opacity 750ms cubic-bezier(.2,.85,.5,1),top 0ms linear 750ms}
+#fs_modal_bg.active{top:0;opacity:1;-webkit-transition:opacity 450ms cubic-bezier(.2,.85,.5,1) .0000001ms;-moz-transition:opacity 450ms cubic-bezier(.2,.85,.5,1) .0000001ms;transition:opacity 450ms cubic-bezier(.2,.85,.5,1) .0000001ms}
+#fs_modal{position:fixed;top:0;right:0;bottom:0;left:0;background:#fff;z-index:1001;font-family:Lato,appleLogo,sans-serif;font-size:18px;line-height:1.5rem;overflow-y:scroll;-webkit-transform:translate(0,100%);-moz-transform:translate(0,100%);-ms-transform:translate(0,100%);transform:translate(0,100%);-webkit-transition:-webkit-transform 400ms cubic-bezier(.2,.9,.35,1);-moz-transition:-moz-transform 400ms cubic-bezier(.2,.9,.35,1);transition:transform 400ms cubic-bezier(.2,.9,.35,1);box-shadow:0 0 10px rgba(0,0,0,.25)}
+#fs_modal.active{-webkit-transform:translate(0,0);-moz-transform:translate(0,0);-ms-transform:translate(0,0);transform:translate(0,0);-webkit-transition:-webkit-transform 550ms cubic-bezier(.2,.9,.35,1);-moz-transition:-moz-transform 550ms cubic-bezier(.2,.9,.35,1);transition:transform 550ms cubic-bezier(.2,.9,.35,1)}
+#fs_modal #fs_modal_close_btn{position:absolute;top:5%;right:3%;width:4rem;height:4rem;z-index:1;text-align:center;cursor:pointer;color:#9e9ea6;font-size:.8rem;line-height:1.5rem;border-radius:100%}
+#fs_modal #fs_modal_close_btn .ts_icon{position:absolute;top:1rem;left:0;width:100%;display:block}
+#fs_modal #fs_modal_close_btn .ts_icon:before{font-size:2rem}
+#fs_modal #fs_modal_close_btn .key_label{position:absolute;top:2.25rem;left:0;width:100%;display:block}
+#fs_modal #fs_modal_close_btn:hover{color:#555459;background:#e8e8e8}
+#fs_modal #fs_modal_close_btn:active{color:#fff;background:#2ab27b}
+#fs_modal .contents_container{padding:10% 18% 10% 22%}
+#fs_modal .contents{max-width:640px;margin:0 auto}
+#fs_modal .actions{margin:2rem auto}
+#fs_modal .actions .btn{margin-right:.25rem}

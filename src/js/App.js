@@ -6,7 +6,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <DocumentTitle title='Slack'>
+      <DocumentTitle title='Slack-Project'>
         <RouteHandler {...this.props} />
       </DocumentTitle>
     );

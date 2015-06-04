@@ -1,0 +1,81 @@
+.transparent{color:transparent!important}
+.neutral_white{color:#fff!important}
+.neutral_white_bg{background-color:#fff!important}
+.neutral_grey{color:#fbfbfa!important}
+.indifferent_grey{color:#555459!important}
+.indifferent_grey_bg{background-color:#555459!important}
+.charcoal_grey{color:#434245!important}
+.subtle_silver{color:#9e9ea6!important}
+.subtle_silver_bg{background-color:#9e9ea6!important}
+.soft_grey{color:#e8e8e8!important}
+.soft_grey_bg{background-color:#e8e8e8!important}
+.severe_grey{color:#3d3c40!important}
+.severe_grey_bg{background-color:#3d3c40!important}
+.dull_grey{color:#8b898f!important}
+.dull_grey_bg{background-color:#8b898f!important}
+.cloud_silver{color:#babbbf!important}
+.cloud_silver_bg{background-color:#babbbf!important}
+.warm_white{color:#fbfaf8!important}
+.warm_white_bg{background-color:#fbfaf8!important}
+.cloud_white{color:#f2f2f5!important}
+.cloud_white_bg{background-color:#f2f2f5!important}
+.seafoam_green{color:#2ab27b!important}
+.seafoam_green_bg{background-color:#2ab27b!important}
+.clear_blue{color:#439fe0!important}
+.clear_blue_bg{background-color:#439fe0!important}
+.solid_blue{color:#2780f8!important}
+.solid_blue_bg{background-color:#2780f8!important}
+.candy_red{color:#eb4d5c!important}
+.candy_red_bg{background-color:#eb4d5c!important}
+.highlight_yellow_bg{background-color:#fffce0!important}
+.mention_yellow_bg{background-color:#fff3b8!important}
+.star_yellow{color:#fc0!important}
+.star_yellow_bg{background-color:#fc0!important}
+.yolk_orange{color:#edb431!important}
+.yolk_orange_bg{background-color:#edb431!important}
+.thrills_purple{color:#7d60c5!important}
+.burnt_violet{color:#4d394b!important}
+.burnt_violet_bg{background-color:#4d394b!important}
+.ocean_teal{color:#4c9689!important}
+.ocean_teal_bg{background-color:#4c9689!important}
+.havana_blue{color:#2a80b9!important}
+.havana_blue_bg{background-color:#2a80b9!important}
+.pale_blue{color:#f0f7fb!important}
+.pale_blue_bg{background-color:#f0f7fb!important}
+.sky_blue{color:#439fe0!important}
+.sky_blue_bg{background-color:#439fe0!important}
+.slate_blue{color:#3c4b5b!important}
+.slate_blue_bg{background-color:#3c4b5b!important}
+.muddy_lilac{color:#937e91!important}
+.muddy_lilac_bg{background-color:#937e91!important}
+.moscow_red,.moscow_red_on_hover:hover{color:#cb5234!important}
+.moscow_red_bg{background-color:#cb5234!important}
+.moscow_red_dark{color:#870000!important}
+.moscow_red_dark_bg{background-color:#870000!important}
+.mustard_yellow{color:#dfa941!important}
+.mustard_yellow_bg{background-color:#dfa941!important}
+.kelly_green{color:#36a64f!important}
+.kelly_green_dark{color:#257337!important}
+.kelly_green_bg{background-color:#36a64f!important}
+.channel_page_blue{color:#2d9cf5!important}
+.pin_orange{color:#ff876d!important}
+.dropbox_blue{color:#007ee5!important}
+.dropbox_blue_bg{background-color:#007ee5!important}
+.twitter_blue{color:#55acee!important}
+.twitter_blue_bg{background-color:#55acee!important}
+.gdrive_blue_bg{background-color:#4285f4!important}
+.screenhero_blue{color:#1a9cdb!important}
+.screenhero_blue_bg{background-color:#1a9cdb!important}
+.tab_menu{display:block;width:100%;background-color:#fff}
+.tab_menu:after,.tab_menu:before{display:table;content:' ';clear:both}
+.tab_menu.grey{background-color:#fbfbfa}
+.tab_menu .tab{background:0 0;-webkit-tap-highlight-color:transparent;cursor:pointer;border:0;padding:.75rem;font-size:.85rem;line-height:20px;color:#9e9ea6;display:inline-block;text-align:center;float:left;transition:box-shadow .125s ease-out;box-shadow:inset 0 -4px 0 0 transparent}
+.tab_menu .tab .ts_icon:before{vertical-align:top}
+.tab_menu .tab:hover{box-shadow:inset 0 -4px 0 0 #b2d5c9}
+.tab_menu .tab.active,.tab_menu .tab:active,.tab_menu .tab:focus{outline:0;color:#555459;box-shadow:inset 0 -4px 0 0 #2ab27b}
+.tab_menu .tab:disabled{cursor:not-allowed;color:#babbbf}
+.tab_panels .panel{width:100%;display:none}
+.tab_panels .panel.active{display:block}
+@media screen and (min-width:30rem){.tab_menu.even_2 .tab{width:50%}
+.tab_menu.even_3 .tab,.tab_menu.even_4 .tab{width:33.33%}
+}

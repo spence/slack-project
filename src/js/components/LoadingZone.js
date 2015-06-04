@@ -22,7 +22,7 @@ export default class LoadingZone extends Component {
         <div id="loading_welcome">
           <div>
             <p id="loading_indicator">Loading {this.state.dots}</p>
-            <p id="loading_welcome_msg">There once was an app called Slack.</p>
+            <p id="loading_welcome_msg">There once was an app named Slack.</p>
             <p id="loading_welcome_author">added by Spencer</p>
           </div>
         </div>

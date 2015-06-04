@@ -1,0 +1,124 @@
+@font-face{font-family:'Emoji Passthrough';src:url(/static/fonts/emoji-passthrough.woff) format('woff');font-weight:400;unicode-range:U+1F300-1F5FF,U+1F600-1F64F,U+1F680-1F6FF,U+2600-26FF}
+@font-face{font-family:appleLogo;src:local("Lucida Grande");unicode-range:U+F8FF}
+.helvetica{font-family:'Emoji Passthrough',"Helvetica Neue",Helvetica,Arial,sans-serif}
+.lato_black{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:900}
+.lato_bold{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:700}
+.lato_light{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:300}
+.monospace{font-family:'Emoji Passthrough',Monaco,Menlo,Consolas,"Courier New",monospace!important}
+@-webkit-keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+@-moz-keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+@keyframes progress_bar{from{background-position:0 0}
+to{background-position:-56px 0}
+}
+.transparent{color:transparent!important}
+.neutral_white{color:#fff!important}
+.neutral_white_bg{background-color:#fff!important}
+.neutral_grey{color:#fbfbfa!important}
+.indifferent_grey{color:#555459!important}
+.indifferent_grey_bg{background-color:#555459!important}
+.charcoal_grey{color:#434245!important}
+.subtle_silver{color:#9e9ea6!important}
+.subtle_silver_bg{background-color:#9e9ea6!important}
+.soft_grey{color:#e8e8e8!important}
+.soft_grey_bg{background-color:#e8e8e8!important}
+.severe_grey{color:#3d3c40!important}
+.severe_grey_bg{background-color:#3d3c40!important}
+.dull_grey{color:#8b898f!important}
+.dull_grey_bg{background-color:#8b898f!important}
+.cloud_silver{color:#babbbf!important}
+.cloud_silver_bg{background-color:#babbbf!important}
+.warm_white{color:#fbfaf8!important}
+.warm_white_bg{background-color:#fbfaf8!important}
+.cloud_white{color:#f2f2f5!important}
+.cloud_white_bg{background-color:#f2f2f5!important}
+.seafoam_green{color:#2ab27b!important}
+.seafoam_green_bg{background-color:#2ab27b!important}
+.clear_blue{color:#439fe0!important}
+.clear_blue_bg{background-color:#439fe0!important}
+.solid_blue{color:#2780f8!important}
+.solid_blue_bg{background-color:#2780f8!important}
+.candy_red{color:#eb4d5c!important}
+.candy_red_bg{background-color:#eb4d5c!important}
+.highlight_yellow_bg{background-color:#fffce0!important}
+.mention_yellow_bg{background-color:#fff3b8!important}
+.star_yellow{color:#fc0!important}
+.star_yellow_bg{background-color:#fc0!important}
+.yolk_orange{color:#edb431!important}
+.yolk_orange_bg{background-color:#edb431!important}
+.thrills_purple{color:#7d60c5!important}
+.burnt_violet{color:#4d394b!important}
+.burnt_violet_bg{background-color:#4d394b!important}
+.ocean_teal{color:#4c9689!important}
+.ocean_teal_bg{background-color:#4c9689!important}
+.havana_blue{color:#2a80b9!important}
+.havana_blue_bg{background-color:#2a80b9!important}
+.pale_blue{color:#f0f7fb!important}
+.pale_blue_bg{background-color:#f0f7fb!important}
+.sky_blue{color:#439fe0!important}
+.sky_blue_bg{background-color:#439fe0!important}
+.slate_blue{color:#3c4b5b!important}
+.slate_blue_bg{background-color:#3c4b5b!important}
+.muddy_lilac{color:#937e91!important}
+.muddy_lilac_bg{background-color:#937e91!important}
+.moscow_red,.moscow_red_on_hover:hover{color:#cb5234!important}
+.moscow_red_bg{background-color:#cb5234!important}
+.moscow_red_dark{color:#870000!important}
+.moscow_red_dark_bg{background-color:#870000!important}
+.mustard_yellow{color:#dfa941!important}
+.mustard_yellow_bg{background-color:#dfa941!important}
+.kelly_green{color:#36a64f!important}
+.kelly_green_dark{color:#257337!important}
+.kelly_green_bg{background-color:#36a64f!important}
+.channel_page_blue{color:#2d9cf5!important}
+.pin_orange{color:#ff876d!important}
+.dropbox_blue{color:#007ee5!important}
+.dropbox_blue_bg{background-color:#007ee5!important}
+.twitter_blue{color:#55acee!important}
+.twitter_blue_bg{background-color:#55acee!important}
+.gdrive_blue_bg{background-color:#4285f4!important}
+.screenhero_blue{color:#1a9cdb!important}
+.screenhero_blue_bg{background-color:#1a9cdb!important}
+.btn{background:#2ab27b;color:#fff!important;-webkit-font-smoothing:antialiased;font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;line-height:1.2rem;font-weight:900;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;text-decoration:none;cursor:pointer;text-shadow:0 1px 1px rgba(0,0,0,.1);border:none;border-bottom:2px solid transparent;border-radius:.25rem;box-shadow:none;display:inline-block;vertical-align:bottom;text-align:center;white-space:nowrap;margin:0;-webkit-appearance:none;-webkit-tap-highlight-color:transparent}
+.no_touch .btn.hover,.no_touch .btn:focus,.no_touch .btn:hover{background:#2ab27b;border-bottom-color:rgba(0,0,0,.25);color:#fff;outline:0;text-decoration:none}
+.btn.active,.btn:active{color:#fff;border-bottom-color:transparent!important;box-shadow:inset 0 2px 1px rgba(0,0,0,.2)}
+.btn_outline{background:#fbfbfa;border:1px solid #C7CACD;color:#555459!important;font-weight:700;text-shadow:none}
+.no_touch .btn_outline.hover,.no_touch .btn_outline:focus,.no_touch .btn_outline:hover{background:#fff;color:#439fe0!important;border-color:#C7CACD;border-width:1px}
+.btn_outline:active{color:#439fe0;box-shadow:inset 0 1px 1px rgba(0,0,0,.2);border-bottom:1px solid #C7CACD!important}
+.btn_outline.active{color:#666!important;margin-top:0;font-weight:900;box-shadow:none}
+.btn.btn_outline.btn_danger,.btn.btn_outline.btn_warning{background:#fbfbfa!important}
+.no_touch .btn.btn_outline.btn_danger:hover,.no_touch .btn.btn_outline.btn_warning:hover{background:#fff!important}
+.no_touch .btn.btn_outline.btn_warning:hover{color:#dfa941!important;border-color:#dfa941!important}
+.no_touch .btn.btn_outline.btn_danger:hover{border-color:#cb5234!important;color:#cb5234!important}
+.btn.btn_outline.disabled,.btn.btn_outline.disabled:hover{color:#9e9ea6!important;background:#fff!important}
+.btn i{margin-right:.25rem}
+.btn i:before{font-size:inherit;vertical-align:bottom}
+.btn_large i{margin-right:.5rem;font-size:18px}
+.btn_icon{position:relative;padding-left:3rem!important}
+.btn_icon i{position:absolute;top:0;left:0;bottom:-2px;padding:.5rem .75rem;border-right:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.2);display:inline-block;background-clip:padding-box;font-size:1.4rem!important;line-height:2.25rem;border-radius:.25rem 0 0 .25rem}
+.btn.disabled,.btn.disabled:active,.btn.disabled:hover,.btn:disabled,.btn:disabled:active,.btn:disabled:hover{background-color:#9e9ea6!important;opacity:.35;box-shadow:none!important;pointer-events:none}
+.btn{padding:8px 14px 7px;font-size:15px}
+.btn_small{padding:5px 10px 3px;font-size:14px}
+.btn_small i:before{font-size:15px}
+.btn_large{padding:14px 32px;font-size:20px}
+@media only screen and (max-width:640px){.btn_large{padding:14px 20px}
+}
+.btn.btn_outline{padding:7px 13px 8px}
+.btn.btn_small.btn_outline{padding:4px 9px}
+.btn.btn_large.btn_outline{padding:14px 31px}
+.btn_info{background:#439fe0!important}
+.btn_warning{background:#dfa941!important}
+.btn_danger{background:#cb5234!important}
+.btn_twitter{background:#55acee!important}
+.btn_facebook{background:#3b5998!important}
+.btn_transparent{background:rgba(255,255,255,.25)!important}
+.btn.dropdown-toggle .caret{border-top-color:#fff}
+.btn_ios,.btn_ios:active,.no_touch .btn_ios:focus,.no_touch .btn_ios:hover{width:127px;height:38px;background-image:url(/static/images/ios_app_store_badge.png);background-size:127px 38px}
+.btn_android,.btn_android:active,.no_touch .btn_android:focus,.no_touch .btn_android:hover{width:107px;height:38px;background-image:url(/static/images/google_play_badge.png);background-size:107px 38px}
+.btn_android,.btn_android:active,.btn_ios,.btn_ios:active,.no_touch .btn_android:focus,.no_touch .btn_android:hover,.no_touch .btn_ios:focus,.no_touch .btn_ios:hover{border-radius:0;background-color:transparent;border-bottom:0}
+@media only screen and (-webkit-min-device-pixel-ratio:2),only screen and (min-resolution:192dpi),only screen and (min-resolution:2dppx){.btn_ios{background-image:url(/static/images/ios_app_store_badge@2x.png)}
+.btn_android{background-image:url(/static/images/google_play_badge@2x.png)}
+}

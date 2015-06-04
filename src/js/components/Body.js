@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-export default class Messages extends Component {
+export default class Body extends Component {
 
   render () {
     return (
-      <div id="messages"></div>
+      <div id="body"></div>
     );
   }
 
