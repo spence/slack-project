@@ -3,20 +3,29 @@ import BaseStore from './BaseStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 import Constants from '../constants/Constants';
 
-let _authUser = null;
-let _authenticateUser = (emitter) => {
+let _authToken = null;
+let _loading = true; // page starts as loading
+let _error = false;
+let _authenticateUser = (authStore) => {
+
+  _loading = false;
+  _error = false;
+  authStore.emitChange();
 
   // Sign the user in, and then retrieve their ID.
-  auth2.signIn().then(() => {
-    var googleUser = auth2.currentUser.get();
+  window.auth2.signIn().then(() => {
+    var googleUser = window.auth2.currentUser.get();
     var profile = googleUser.getBasicProfile();
     var user = {
       id_token: googleUser.getAuthResponse().id_token,
-      user_id: auth2.currentUser.get().getId(),
+      user_id: googleUser.getId(),
       email: profile.getEmail(),
       name: profile.getName(),
       image_url: profile.getImageUrl()
     };
+    _loading = true;
+    _error = false;
+    authStore.emitChange();
     $.ajax({
       method: 'POST',
       url: '/googleauth',
@@ -24,29 +33,28 @@ let _authenticateUser = (emitter) => {
       data: user,
       contentType: 'application/x-www-form-urlencoded',
       success (response) {
+        _loading = false;
         // Validate & update state
         if (response.status === 'success' && user.user_id === response.user_id) {
-          _authUser = {
-            user_id: user.user_id,
-            email: user.email,
-            name: user.name,
-            image_url: user.image_url,
-            auth_token: response.auth_token
-          }
+          _authToken = response.auth_token;
+          _error = false;
         } else {
-          _authUser = null;
+          _authToken = null;
+          _error = true;
         }
-        emitter.emitChange();
+        authStore.emitChange();
       },
       error () {
-        _authUser = null;
-        emitter.emitChange();
+        _authToken = null;
+        _loading = false;
+        _error = true;
+        authStore.emitChange();
       }
     });
   });
 };
 
-export default new class AuthStore extends BaseStore {
+let authStore = new class AuthStore extends BaseStore {
 
   register (action) {
     switch (action.actionType) {
@@ -56,8 +64,34 @@ export default new class AuthStore extends BaseStore {
     }
   }
 
-  getUserProfile () {
-    return _authUser;
+  getAuthenticationState () {
+    return {
+      authenticated: !!_authToken,
+      error: _error,
+      loading: _loading
+    };
+  }
+
+  getAuthenticationToken () {
+    return _authToken;
+  }
+
+  isAuthenticated () {
+    return _authToken && !_error && !_loading;
   }
 
 }
+
+// Enable google button to be clicked
+window.registerAuthenticationReady((auth_token) => {
+  // We need to allow user to auth via button
+  _loading = false;
+
+  // If we have a token, it means the user was already signed in
+  if (auth_token) {
+    _authToken = auth_token;
+  }
+  authStore.emitChange();
+});
+
+export default authStore;

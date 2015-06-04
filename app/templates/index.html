@@ -1,24 +1,66 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no_touch">
   <head>
     <meta charset="utf-8">
     <title>Slack</title>
     <link rel="stylesheet" href="/static/app.css">
-
+    <link rel="icon" href="/static/images/app-256.png" sizes="256x256" type="image/png" rel="shortcut icon">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
     <script>
-      var auth2, start = function() {
-        gapi.load('auth2', function() {
-          // Init auth
-          auth2 = gapi.auth2.init({
-            client_id: '867427487654-4o9ugpqmst50dscliec6d95mokh0k2j1.apps.googleusercontent.com',
-            cookiepolicy: 'single_host_origin',
-            fetch_basic_profile: true,
-            scope: 'profile email'
+      (function(w) {
+
+        // Prevent iframe
+        if (w.self !== w.top) {
+          window.document.write(
+            "\u003Cstyle>body * {display:none !important;}\u003C\/style>\u003Ca href=\"#\" onclick=" +
+            "\"top.location.href=window.location.href\" style=\"display:block !important;padding:10px" +
+            "\">Go to Slack-Project\u003C\/a>");
+          return;
+        }
+
+        // Two ways to authenticate
+        w.auth2 = null;
+        var auth_token = (/(?:^|; )auth_token=([\w\.\-]+)(?:$|;)/.exec(w.document.cookie)||[])[1];
+
+        // Pub/sub callbacks listening for auth ready
+        var callbacks = [];
+        var callCallbacks = function() {
+          for (var i = 0; i < callbacks.length; i++) {
+            callbacks[i](auth_token);
+          }
+        };
+        // Public method available to react app
+        w.registerAuthenticationReady = function(callback) {
+          if (w.auth2 !== null || auth_token !== null) {
+            callback(auth_token);
+          } else {
+            callbacks.push(callback);
+          }
+        };
+
+        // Check for auth cookie (skip init gauth)
+        if (auth_token) {
+          callCallbacks();
+          return;
+        }
+
+        // Method guath calls when the JS loads
+        w.start = function() {
+          gapi.load('auth2', function() {
+            // Init auth
+            w.auth2 = gapi.auth2.init({
+              client_id: '867427487654-4o9ugpqmst50dscliec6d95mokh0k2j1.apps.googleusercontent.com',
+              cookiepolicy: 'single_host_origin',
+              fetch_basic_profile: true,
+              scope: 'profile email'
+            });
+            // Call callbacks
+            callCallbacks();
           });
-        });
-      };
+        };
+
+      })(window);
     </script>
 
   </head>

@@ -1,6 +1,9 @@
 
-from flask import request, render_template, json, Blueprint
+import hashlib
+import datetime, time
+from flask import request, render_template, json, Blueprint, make_response
 from oauth2client import client, crypt
+from itsdangerous import TimestampSigner
 
 from app import app, db
 
@@ -42,7 +45,7 @@ def gauth_signin():
             raise crypt.AppIdentityError("Unrecognized client.")
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise crypt.AppIdentityError("Wrong issuer.")
-        if request.environ['HTTP_ORIGIN'] not in app.config['AUTH_ORIGINS']:
+        if request.environ['HTTP_ORIGIN'] != app.config['AUTH_ORIGIN']:
             raise crypt.AppIdentityError("Wrong origin.")
         if user_id != idinfo['sub']:
             raise crypt.AppIdentityError("User IDs do not match.")
@@ -53,16 +56,41 @@ def gauth_signin():
         # Catch all
         app.handle_exception(exception)
         return json.jsonify(status='failure')
-    
-    # print models.User.query.filter(auth_id=user_id).get()
 
+    # Setup user auth
+    user = models.User.query.filter_by(auth_id=user_id).first()
+    if user is None:
+        # Add user (strip all special characters for now)
+        username = ''.join(c for c in name if c.isalnum())
+        if username == '':
+            # If there username is null, generate a random one (hopefully without collisions)
+            username = hashlib.sha1(user_id).hexdigest()[:15]
+        user = models.User(
+            auth_id=user_id,
+            username=username,
+            name=name,
+            email=email,
+            image_url=image_url,
+        )
+        db.session.add(user)
+    else:
+        # Update user profile
+        user.name = name
+        user.email = email
+        user.image_url = image_url
 
-    # models.User(
-    #     auth_id=user_id,
-    #     user_at=
-    # )
+    # Create secure self-signed auth token that expires
+    # http://pythonhosted.org/itsdangerous/
+    signer = TimestampSigner(app.config['SECRET_KEY'])
+    auth_token = signer.sign(user_id)
 
-    # app.open_session(request)
-    # Get CSRFtoken
+    # Commit and return
+    db.session.commit()
 
-    return json.jsonify(user_id=user_id, auth_token='rand', status='success')
+    # Store session cookie so use does not need to refetch this
+    expiration_seconds = app.config['AUTH_TOKEN_SECONDS']
+    response = make_response(json.jsonify(status='success', user_id=user_id, auth_token=auth_token))
+    response.set_cookie(key='auth_token', value=auth_token, secure=True, path='/',
+                        domain=app.config['AUTH_DOMAIN'], max_age=expiration_seconds)
+
+    return response

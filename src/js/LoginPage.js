@@ -8,7 +8,14 @@ export default class LoginPage extends Component {
     router: PropTypes.func.isRequired
   }
 
+  state = {
+    error: false,
+    loading: false,
+    authenticated: null
+  }
+
   componentDidMount () {
+    this.setState(AuthStore.getAuthenticationState());
     AuthStore.addChangeListener(() => { this.onUserChange(); });
   }
 
@@ -17,42 +24,26 @@ export default class LoginPage extends Component {
   }
 
   onUserChange () {
-    var error = false;
-    var profile = AuthStore.getUserProfile();
-    if (!profile) {
-      error = true;
-    }
-    this.setState({
-      authError: error,
-      loading: false,
-      userProfile: profile
-    });
-    console.log(profile);
-    if (profile) {
+    this.setState(AuthStore.getAuthenticationState());
+    if (AuthStore.isAuthenticated()) {
       var { router } = this.context;
       router.transitionTo('/');
     }
   }
 
-  state = {
-    authError: false,
-    loading: false,
-    userProfile: null
-  }
-
   render() {
 
     // Check for logged-in user and redirect
-    var profile = AuthStore.getUserProfile();
-    if (profile) {
+    if (AuthStore.isAuthenticated()) {
       var { router } = this.context;
       router.transitionTo('/');
     }
 
     // Trigger Google Profile login
     let handleClick = () => {
-      this.state.authError = false;
-      this.state.loading = true;
+      this.setState({
+        error: false,
+      });
       Actions.authenticateUser();
     };
 
@@ -69,16 +60,16 @@ export default class LoginPage extends Component {
         </header>
         <div id="page">
           <div id="page_contents">
-            {this.state.authError ?
+            {this.state.error ?
               <p className="alert alert_error">
-                <i className="ts_icon ts_icon_warning"></i> Failure during authenticating. Please try again
+                <i className="ts_icon ts_icon_warning"></i> Failure during authenticating. Please try again.
               </p> : null
             }
             <div className="real_content card align_center span_4_of_6 col float_none margin_auto large_bottom_margin right_padding">
               <h1> Sign in to <span className="break_word">slack-project</span></h1>
               <div className="col span_4_of_6 float_none margin_auto large_bottom_margin">
                 <p>
-                  <button id="signin_btn" type="submit" onClick={handleClick} disabled={this.state.loading}
+                  <button id="signin_btn" type="submit" onClick={handleClick} disabled={this.state.loading ? "disabled" : false}
                           className="btn btn_large full_width ladda-button" data-style="expand-right">
                     <span className="ladda-label">Sign in with Google</span>
                     <span className="ladda-spinner"></span>

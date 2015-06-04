@@ -14,16 +14,18 @@ DATABASE_CONNECT_OPTIONS = {'charset': 'utf8mb4', 'use_unicode': 1}
 GAUTH_CLIENT_ID = '867427487654-4o9ugpqmst50dscliec6d95mokh0k2j1.apps.googleusercontent.com'
 
 # Validate origin for WS and XHR
-AUTH_DOMAIN_NAMES = ['localhost', 'slack.projects.spencercreasey.com']
-AUTH_ORIGINS = [
-    'https://localhost',
-    'https://slack.projects.spencercreasey.com'
-]
+AUTH_ORIGIN = 'https://slack.projects.spencercreasey.com'
 
-# Turn on CSRFtoken generation. We don't use forms, but someone will eventually.
+# Setting cookie domain
+AUTH_DOMAIN = 'slack.projects.spencercreasey.com'
+
+# Turn on CSRFtoken generation. We don't use forms, but someone would eventually.
 # For WS/XHR, we validate using Origin.
 CSRF_ENABLED = True
 CSRF_SESSION_KEY = "secret"
 
 # Random bits for creating session cookies
 SECRET_KEY = "rWpEAVAWVQnY{7=@D72TRwgJJNiK"
+
+# Length of session auth token
+AUTH_TOKEN_SECONDS = 60 * 60 * 24  # 1 day
