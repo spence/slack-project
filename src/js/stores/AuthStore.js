@@ -56,7 +56,7 @@ let _authenticateUser = (authStore) => {
 
 let authStore = new class AuthStore extends BaseStore {
 
-  register (action) {
+  register(action) {
     switch (action.actionType) {
       case Constants.ActionTypes.AUTH_USER:
         _authenticateUser(this);
@@ -64,7 +64,7 @@ let authStore = new class AuthStore extends BaseStore {
     }
   }
 
-  getAuthenticationState () {
+  getAuthenticationState() {
     return {
       authenticated: !!_authToken,
       error: _error,
@@ -72,12 +72,18 @@ let authStore = new class AuthStore extends BaseStore {
     };
   }
 
-  getAuthenticationToken () {
+  getAuthenticationToken() {
     return _authToken;
   }
 
-  isAuthenticated () {
+  isAuthenticated() {
     return _authToken && !_error && !_loading;
+  }
+
+  clearAuthentication() {
+    _authToken = null;
+    _loading = false;
+    _error = false;
   }
 
 }

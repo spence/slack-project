@@ -14,6 +14,19 @@ export default class LoginPage extends Component {
     authenticated: null
   }
 
+  static willTransitionTo = (transition, params) => {
+    // Check for logged-in user and redirect
+    if (AuthStore.isAuthenticated()) {
+      // Help connect chat since chat page doesn't always receive this event
+      Actions.connectChat();
+      transition.redirect('/');
+    }
+  }
+
+  static willTransitionFrom = (transition, component) => {
+    console.log('[login] transition from', transition, component);
+  }
+
   componentDidMount () {
     this.setState(AuthStore.getAuthenticationState());
     AuthStore.addChangeListener(() => { this.onUserChange(); });
@@ -31,22 +44,15 @@ export default class LoginPage extends Component {
     }
   }
 
+  // Trigger Google Profile login
+  handleClick() {
+    this.setState({
+      error: false,
+    });
+    Actions.authenticateUser();
+  };
+
   render() {
-
-    // Check for logged-in user and redirect
-    if (AuthStore.isAuthenticated()) {
-      var { router } = this.context;
-      router.transitionTo('/');
-    }
-
-    // Trigger Google Profile login
-    let handleClick = () => {
-      this.setState({
-        error: false,
-      });
-      Actions.authenticateUser();
-    };
-
     return (
       <div className="login">
         <header>
@@ -69,7 +75,7 @@ export default class LoginPage extends Component {
               <h1> Sign in to <span className="break_word">slack-project</span></h1>
               <div className="col span_4_of_6 float_none margin_auto large_bottom_margin">
                 <p>
-                  <button id="signin_btn" type="submit" onClick={handleClick} disabled={this.state.loading ? "disabled" : false}
+                  <button id="signin_btn" type="submit" onClick={() => { this.handleClick(); }} disabled={this.state.loading ? "disabled" : false}
                           className="btn btn_large full_width ladda-button" data-style="expand-right">
                     <span className="ladda-label">Sign in with Google</span>
                     <span className="ladda-spinner"></span>

@@ -16,6 +16,7 @@ class SlackChatServer(WebSocketApplication):
         auth_token = parse_cookie(self.ws.environ['HTTP_COOKIE']).get('auth_token')
         if auth_token is None:
             self.on_close('invalid authentication')
+            self.ws.send('AUTH')  # tell client to reauth
             self.ws.close()
         else:
             expiration_seconds = app.config['AUTH_TOKEN_SECONDS']
@@ -24,9 +25,11 @@ class SlackChatServer(WebSocketApplication):
                 return signer.unsign(auth_token, max_age=expiration_seconds)
             except SignatureExpired:
                 self.on_close('auth token expired')
+                self.ws.send('AUTH')  # tell client to reauth
                 self.ws.close()
             except BadSignature:
                 self.on_close('invalid authentication')
+                self.ws.send('AUTH')  # tell client to reauth
                 self.ws.close()
 
     def on_open(self):
@@ -57,8 +60,8 @@ class SlackChatServer(WebSocketApplication):
         print repr(message)
 
         # Handle heartbeat
-        if message == 'hb':
-            self.ws.send('hb')
+        if message == 'HB':
+            self.ws.send('HB')
             return
 
         # Decode data and process rpc

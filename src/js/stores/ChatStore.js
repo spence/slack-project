@@ -10,6 +10,7 @@ let rpc = new WebSocketRPC('wss://slack.projects.spencercreasey.com/chat/');
  * Fired upon connecting.
  */
 rpc.on('connect', () => {
+  console.log('connect');
   chatStore.emitChange();
 
   // _fetchUserChannels();
@@ -41,8 +42,8 @@ rpc.on('error', (error) => {
  * Fired upon a disconnection.
  */
 rpc.on('disconnect', () => {
-  chatStore.emitChange();
   console.log('disconnect');
+  chatStore.emitChange();
 });
 
 /**
@@ -50,16 +51,16 @@ rpc.on('disconnect', () => {
  * @param {number} reconnect reconnection attempt number.
  */
 rpc.on('reconnect', (attempt) => {
-  chatStore.emitChange();
   console.log('successful reconnect', attempt);
+  chatStore.emitChange();
 });
 
 /**
  * Fired upon an attempt to reconnect.
  */
 rpc.on('reconnect_attempt', (attempt) => {
-  chatStore.emitChange();
   console.log('reconnect_attempt', attempt);
+  chatStore.emitChange();
 });
 
 /**
@@ -67,8 +68,8 @@ rpc.on('reconnect_attempt', (attempt) => {
  * @param {number} reconnect reconnection attempt number.
  */
 rpc.on('reconnecting', () => {
-  chatStore.emitChange();
   console.log('reconnecting');
+  chatStore.emitChange();
 });
 
 /**
@@ -76,18 +77,27 @@ rpc.on('reconnecting', () => {
  * @param {Object} error error data.
  */
 rpc.on('reconnect_error', (error) => {
-  chatStore.emitChange();
   console.log('reconnect_error', error);
+  chatStore.emitChange();
 });
 
 /**
  * Fired when couldn’t reconnect within reconnectionAttempts.
  */
 rpc.on('reconnect_failed', (error) => {
-  chatStore.emitChange();
   console.log('reconnect_failed', error);
+  chatStore.emitChange();
 });
 
+rpc.on('reauthenticate', () => {
+  console.log('reauthenticate');
+  chatStore.emitChange();
+});
+
+rpc.on('destroy', () => {
+  console.log('destroy');
+  chatStore.emitChange();
+});
 
 let _fetchUserChannels = () => {
   // socket.emit('users:all', this.updateUsers.bind(this));
@@ -99,47 +109,57 @@ let _fetchCurrentChannel = () => {
 
 let chatStore = new class ChatStore extends BaseStore {
 
-  isConnected () {
+  isConnected() {
     return rpc.isConnected();
   }
 
-  isConnecting () {
+  isConnecting() {
     return rpc.isConnecting();
   }
 
-  getUserChannels () {
-      return _sftpUsers;
+  getUserChannels() {
+    return null;
   }
 
-  getAllChannels () {
-      return _sftpUsers;
+  getAllChannels() {
+    return null;
   }
 
-  getChannel () {
-      return _sftpUsers;
+  getChannel() {
+    return null;
   }
 
-  createChannel () {
-      return _sftpUsers;
+  createChannel() {
+    return null;
   }
 
-  archiveChannel () {
-      return _sftpUsers;
+  archiveChannel() {
+    return null;
   }
 
-  enterChannel () {
-      return _sftpUsers;
+  enterChannel() {
+    return null;
   }
 
-  leaveChannel () {
-      return _sftpUsers;
+  leaveChannel() {
+    return null;
+  }
+
+  hasAuthenticationExpired() {
+    return rpc.hasAuthenticationExpired();
+  }
+
+  cleanUpChat() {
+    rpc.destroy();
   }
 
   register (action) {
     switch (action.actionType) {
       case Constants.ActionTypes.CONNECT_CHAT:
-        rpc.connect();
-        chatStore.emitChange();
+        if (!rpc.isConnected() && !rpc.isConnecting()) {
+          rpc.connect();
+          chatStore.emitChange();
+        }
         break;
     }
   }

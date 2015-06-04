@@ -1,12 +1,13 @@
 
 import { EventEmitter } from 'events';
 
-const HEARTBEAT = 'hb';
+const HEARTBEAT = 'HB';
+const REAUTHENTICATE = 'AUTH';
 
 // Mirror socket.io
 const HEARTBEAT_SECS = 15000; // 15 secs
 const HEARTBEAT_TIMEOUT_SECS = 20000; // 20 secs
-const RECONNECT_SECS = 10000; // 10 secs
+const RECONNECT_SECS = 5000; // 10 secs
 
 const EVENTS = new Set([
   'connect',
@@ -16,7 +17,9 @@ const EVENTS = new Set([
   'reconnect_attempt',
   'reconnecting',
   'reconnect_error',
-  'reconnect_failed'
+  'reconnect_failed',
+  'reauthenticate',
+  'destroy'
 ]);
 
 let emitter = new EventEmitter();
@@ -45,10 +48,12 @@ let handleMessage = function(evt) {
 
 let connected = false;
 let connecting = false;
+let authExpired = null;
+
+// Timers
 let heartbeatInterval = null;
-let lastHeartbeatTime = null;
-let heartbeatTimeout = null;
-let connectInterval = null;
+let heartbeatTimer = null;
+let connectTimer = null;
 
 let sendHeartbeat = () => {
   if (connected) {
@@ -57,33 +62,26 @@ let sendHeartbeat = () => {
 }
 
 let receiveHeartbeat = () => {
-  // Update last heartbeat time
-  lastHeartbeatTime = new Date();
   // Restart timeout timer
-  clearInterval(heartbeatTimeout);
-  clearInterval(connectInterval);
-  heartbeatTimeout = setTimeout(() => { connect('reconnect'); }, HEARTBEAT_TIMEOUT_SECS);
+  clearInterval(heartbeatTimer);
+  clearInterval(connectTimer);
+  heartbeatTimer = setTimeout(() => { emitter.emit('reconnect_attempt'); connect('reconnect'); }, HEARTBEAT_TIMEOUT_SECS);
 };
 
 let connect = (type) => {
-  clearInterval(heartbeatTimeout);
+  clearInterval(heartbeatTimer);
   clearInterval(heartbeatInterval);
-  clearInterval(connectInterval);
+  clearInterval(connectTimer);
+  connectTimer = null;
   connecting = true;
-  try {
-    websocket = new WebSocket(websocketURI);
-  } catch (e) {
-    connectInterval = setInterval(() => { connect('reconnect') }, RECONNECT_SECS);
-    connecting = false;
-    return;
-  }
+  websocket = new WebSocket(websocketURI);
   // Bind events
   websocket.onopen = (evt) => {
     connected = true;
     connecting = false;
+    authExpired = false;
     // Setup 1s heartbeat timer
-    heartbeatInterval = setInterval(() => { sendHeartbeat() }, HEARTBEAT_SECS);
-    emitter.emit('connect');
+    heartbeatInterval = setInterval(() => { sendHeartbeat(); }, HEARTBEAT_SECS);
     emitter.emit(type);
   };
   websocket.onmessage = (evt) => {
@@ -92,15 +90,35 @@ let connect = (type) => {
     if (evt.data === HEARTBEAT) {
       return;
     }
+    if (event.data === REAUTHENTICATE) {
+      authExpired = true;
+      emitter.emit('reauthenticate');
+      return;
+    }
     handleMessage.call(this, evt);
   };
   websocket.onerror = (evt) => {
     emitter.emit('error', evt);
   };
   websocket.onclose = (evt) => {
-    connect('reconnect');
+    connected = false;
+    connecting = false;
+    // Setup reconnect
+    if (!connectTimer) {
+      connectTimer = setTimeout(() => { emitter.emit('reconnect_attempt'); connect('reconnect'); }, RECONNECT_SECS);
+    }
     emitter.emit('disconnect');
   };
+}
+
+let destroy = () => {
+  clearInterval(heartbeatTimer);
+  clearInterval(heartbeatInterval);
+  clearInterval(connectTimer);
+  connecting = false;
+  connected = false;
+  websocket = null;
+  emitter.emit('destroy');
 }
 
 export default class WebSocketRPC {
@@ -119,6 +137,14 @@ export default class WebSocketRPC {
 
   isConnecting() {
     return connecting;
+  }
+
+  hasAuthenticationExpired() {
+    return authExpired === false;
+  }
+
+  destroy() {
+    destroy();
   }
 
   // register a listener for a generic event
