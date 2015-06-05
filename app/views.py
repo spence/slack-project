@@ -62,8 +62,8 @@ def gauth_signin():
     if user is None:
         # Add user (strip all special characters for now)
         username = ''.join(c for c in name if c.isalnum())
-        if username == '':
-            # If there username is null, generate a random one (hopefully without collisions)
+        if not username or models.User.query.filter_by(username=username).first() is not None:
+            # Generate a random one
             username = hashlib.sha1(auth_id).hexdigest()[:15]
         user = models.User(
             auth_id=auth_id,
