@@ -75,6 +75,10 @@ class SlackChatServer(WebSocketApplication):
         if user is None:
             return
 
+        # Mark as online
+        user.last_online = datetime.datetime.utcnow()
+        db.session.commit()
+
     def on_message(self, message):
         if message is None:
             return
@@ -82,6 +86,9 @@ class SlackChatServer(WebSocketApplication):
         user = self.get_auth_user()
         if user is None:
             return
+
+        # Mark as online
+        user.last_online = datetime.datetime.utcnow()
 
         print "user: {}".format(user.auth_id)
         print repr(message)

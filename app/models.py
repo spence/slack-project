@@ -84,6 +84,9 @@ class User(Base):
     # Flag for bots!
     bot = db.Column(db.Boolean, default=False)
 
+    # Online presence
+    last_online = db.Column(db.DateTime)
+
     # Cached profile data taken from their Google Profile. This could be moved into separate table.
     # - read-only (updated on last login)
     # - could be used for offline things like newsletters, change of license
