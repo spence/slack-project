@@ -14,8 +14,9 @@ def init_db():
     if Channel.query.count() == 0:
         slackbot = User(
             auth_id='',
-            title='Bot',
+            title='slackbot',
             username='slackbot',
+            bot=True,
             name='Slack Bot',
             email='screasey@gmail.com',
             image_url='https://{}/static/images/slackbot_48.png'.format(app.config['AUTH_DOMAIN'])
@@ -71,6 +72,9 @@ class User(Base):
 
     # User's @name (would be composite with Account if we were supporting that)
     username = db.Column(db.String(120), unique=True)
+
+    # Flag for bots!
+    bot = db.Column(db.Boolean, default=False)
 
     # Cached profile data taken from their Google Profile. This could be moved into separate table.
     # - read-only (updated on last login)
