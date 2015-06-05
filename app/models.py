@@ -6,6 +6,9 @@ import hashlib
 
 from app import db, app
 
+# Identify initial channel by name. Skip thinking about renaming this channel.
+GENERAL_CHANNEL = 'general'
+
 
 def init_db():
     if Channel.query.count() == 0:
@@ -19,7 +22,7 @@ def init_db():
         )
         db.session.add(slackbot)
         general_channel = Channel(
-            name='general',
+            name=GENERAL_CHANNEL,
             owner=slackbot,
             description='',
             private=False,
