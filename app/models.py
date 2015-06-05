@@ -2,8 +2,6 @@
 Models for our chat room.
 """
 
-import hashlib
-
 from app import db, app
 
 # Identify initial channel by name. Skip thinking about renaming this channel.
