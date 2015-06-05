@@ -1,10 +1,12 @@
 
+import datetime
+
 from flask import json
 from geventwebsocket import WebSocketApplication
 from werkzeug.http import parse_cookie
 from itsdangerous import TimestampSigner, SignatureExpired, BadSignature
 
-from app import app
+from app import app, models, db
 
 
 class SlackChatServer(WebSocketApplication):
@@ -24,6 +26,13 @@ class SlackChatServer(WebSocketApplication):
             try:
                 auth_id = signer.unsign(auth_token, max_age=expiration_seconds)
 
+                # Validate user is in db
+                user = models.User.query.filter_by(auth_id=auth_id).first()
+                if user is None:
+                    self.ws.send('AUTH')
+                    self.ws.close()
+                    return
+
                 # Upgrade token if token is about to expire
                 try:
                     reissue_seconds = app.config['REISSUE_AUTH_TOKEN_SECONDS']
@@ -33,7 +42,7 @@ class SlackChatServer(WebSocketApplication):
                     auth_token = signer.sign(auth_id)
                     self.ws.send('UPGRADE:{}'.format(auth_token))
 
-                return user_id
+                return user
 
             except SignatureExpired:
                 self.on_close('auth token expired')
@@ -63,12 +72,17 @@ class SlackChatServer(WebSocketApplication):
 
         # Validate user auth token
         user = self.get_auth_user()
+        if user is None:
+            return
 
     def on_message(self, message):
         if message is None:
             return
 
         user = self.get_auth_user()
+        if user is None:
+            return
+
         print "user: {}".format(user.auth_id)
         print repr(message)
 
@@ -93,13 +107,13 @@ class SlackChatServer(WebSocketApplication):
         if method is None:
             self.ws.send(json.dumps({
                 'error': True,
-                'message': 'Missing "method"',
+                'message': 'Missing rpc method',
             }))
         message_id = data.get('id')
         if message_id is None:
             self.ws.send(json.dumps({
                 'error': True,
-                'message': 'Missing "id"',
+                'message': 'Missing rpc ID',
             }))
 
         # RPC
