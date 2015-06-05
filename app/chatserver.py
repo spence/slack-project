@@ -9,9 +9,9 @@ from app import app
 
 class SlackChatServer(WebSocketApplication):
 
-    def get_user_id(self):
+    def get_auth_user(self):
         """
-        Use self-signed TimestampSigner to retrieve user_id
+        Use self-signed TimestampSigner to retrieve auth_id
         """
         auth_token = parse_cookie(self.ws.environ['HTTP_COOKIE']).get('auth_token')
         if auth_token is None:
@@ -22,15 +22,15 @@ class SlackChatServer(WebSocketApplication):
             expiration_seconds = app.config['AUTH_TOKEN_SECONDS']
             signer = TimestampSigner(app.config['SECRET_KEY'])
             try:
-                user_id = signer.unsign(auth_token, max_age=expiration_seconds)
+                auth_id = signer.unsign(auth_token, max_age=expiration_seconds)
 
                 # Upgrade token if token is about to expire
                 try:
                     reissue_seconds = app.config['REISSUE_AUTH_TOKEN_SECONDS']
-                    user_id = signer.unsign(auth_token, max_age=reissue_seconds)
+                    auth_id = signer.unsign(auth_token, max_age=reissue_seconds)
                 except SignatureExpired:
                     signer = TimestampSigner(app.config['SECRET_KEY'])
-                    auth_token = signer.sign(user_id)
+                    auth_token = signer.sign(auth_id)
                     self.ws.send('UPGRADE:{}'.format(auth_token))
 
                 return user_id
@@ -62,13 +62,14 @@ class SlackChatServer(WebSocketApplication):
             return
 
         # Validate user auth token
-        self.get_user_id()
+        user = self.get_auth_user()
 
     def on_message(self, message):
         if message is None:
             return
 
-        print "user: {}".format(self.get_user_id())
+        user = self.get_auth_user()
+        print "user: {}".format(user.auth_id)
         print repr(message)
 
         # Handle heartbeat

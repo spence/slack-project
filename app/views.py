@@ -35,10 +35,10 @@ def gauth_signin():
     """
     try:
         id_token = request.form['id_token']
-        user_id = request.form['user_id']
         email = request.form['email']
         name = request.form['name']
         image_url = request.form['image_url']
+        auth_id = request.form['auth_id']
         idinfo = client.verify_id_token(id_token, app.config['GAUTH_CLIENT_ID'])
         # If multiple clients access the backend server:
         if idinfo['aud'] != app.config['GAUTH_CLIENT_ID']:
@@ -47,7 +47,7 @@ def gauth_signin():
             raise crypt.AppIdentityError("Wrong issuer.")
         if request.environ['HTTP_ORIGIN'] != app.config['AUTH_ORIGIN']:
             raise crypt.AppIdentityError("Wrong origin.")
-        if user_id != idinfo['sub']:
+        if auth_id != idinfo['sub']:
             raise crypt.AppIdentityError("User IDs do not match.")
     except crypt.AppIdentityError as exception:
         app.handle_exception(exception)
@@ -58,15 +58,15 @@ def gauth_signin():
         return json.jsonify(status='failure')
 
     # Setup user auth
-    user = models.User.query.filter_by(auth_id=user_id).first()
+    user = models.User.query.filter_by(auth_id=auth_id).first()
     if user is None:
         # Add user (strip all special characters for now)
         username = ''.join(c for c in name if c.isalnum())
         if username == '':
             # If there username is null, generate a random one (hopefully without collisions)
-            username = hashlib.sha1(user_id).hexdigest()[:15]
+            username = hashlib.sha1(auth_id).hexdigest()[:15]
         user = models.User(
-            auth_id=user_id,
+            auth_id=auth_id,
             username=username,
             name=name,
             email=email,
@@ -82,14 +82,14 @@ def gauth_signin():
     # Create secure self-signed auth token that expires
     # http://pythonhosted.org/itsdangerous/
     signer = TimestampSigner(app.config['SECRET_KEY'])
-    auth_token = signer.sign(user_id)
+    auth_token = signer.sign(auth_id)
 
     # Commit and return
     db.session.commit()
 
     # Store session cookie so use does not need to refetch this
     expiration_seconds = app.config['AUTH_TOKEN_SECONDS']
-    response = make_response(json.jsonify(status='success', user_id=user_id, auth_token=auth_token))
+    response = make_response(json.jsonify(status='success', auth_id=auth_id, auth_token=auth_token))
     response.set_cookie(key='auth_token', value=auth_token, secure=True, path='/',
                         domain=app.config['AUTH_DOMAIN'], max_age=expiration_seconds)
 
