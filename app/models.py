@@ -144,11 +144,10 @@ class Message(Base):
     channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    timestamp = db.Column(db.DateTime)
-    message = db.Column(db.Text)
+    content = db.Column(db.Text)
 
     # Helpful for debugging
     def __repr__(self):
         # Allow 30 characters
-        message = self.message if len(self.message) <= 30 else '{}...'.format(self.message[:27])
-        return '<Message {}>'.format(message)
+        content = self.content if len(self.content) <= 30 else '{}...'.format(self.content[:27])
+        return '<Message {}>'.format(content)
