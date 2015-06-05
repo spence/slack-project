@@ -35,10 +35,10 @@ def gauth_signin():
     """
     try:
         id_token = request.form['id_token']
-        email = request.form['email']
-        name = request.form['name']
-        image_url = request.form['image_url']
         auth_id = request.form['auth_id']
+        email = request.form.get('email')
+        name = request.form.get('name')
+        image_url = request.form.get('image_url')
         idinfo = client.verify_id_token(id_token, app.config['GAUTH_CLIENT_ID'])
         # If multiple clients access the backend server:
         if idinfo['aud'] != app.config['GAUTH_CLIENT_ID']:
