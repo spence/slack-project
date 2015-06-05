@@ -73,6 +73,8 @@ def gauth_signin():
             image_url=image_url,
         )
         db.session.add(user)
+        general_channel = models.Channel.query.filter_by(name=models.GENERAL_CHANNEL).first()
+        general_channel.users.append(user)
     else:
         # Update user profile
         user.name = name
