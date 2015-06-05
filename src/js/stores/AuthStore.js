@@ -86,6 +86,12 @@ let authStore = new class AuthStore extends BaseStore {
     _error = false;
   }
 
+  upgradeAuthToken(authToken) {
+    _authToken = authToken
+    // Set cookie (dont worry about expires for now -- server handles that)
+    document.cookie = 'auth_token=' + authToken + '; domain=.slack.projects.spencercreasey.com; path=/; secure;'
+  }
+
 }
 
 // Enable google button to be clicked

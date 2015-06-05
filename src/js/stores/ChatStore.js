@@ -30,6 +30,11 @@ rpc.on('connect', () => {
 
 });
 
+rpc.on('upgrade_auth_token', (authToken) => {
+  console.log('new auth token', authToken);
+  AuthStore.upgradeAuthToken(authToken);
+});
+
 /**
  * Fired upon a connection error.
  * @param {Object} error error data.

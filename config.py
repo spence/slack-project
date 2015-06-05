@@ -28,4 +28,5 @@ CSRF_SESSION_KEY = "secret"
 SECRET_KEY = "rWpEAVAWVQnY{7=@D72TRwgJJNiK"
 
 # Length of session auth token
-AUTH_TOKEN_SECONDS = 60 * 60 * 24  # 1 day
+AUTH_TOKEN_SECONDS = 60 * 60 * 24 * 7          # 1 week
+REISSUE_AUTH_TOKEN_SECONDS = 60 * 60 * 24 * 3  # reissue when less than 3 days

@@ -22,7 +22,19 @@ class SlackChatServer(WebSocketApplication):
             expiration_seconds = app.config['AUTH_TOKEN_SECONDS']
             signer = TimestampSigner(app.config['SECRET_KEY'])
             try:
-                return signer.unsign(auth_token, max_age=expiration_seconds)
+                user_id = signer.unsign(auth_token, max_age=expiration_seconds)
+
+                # Upgrade token if token is about to expire
+                try:
+                    reissue_seconds = app.config['REISSUE_AUTH_TOKEN_SECONDS']
+                    user_id = signer.unsign(auth_token, max_age=reissue_seconds)
+                except SignatureExpired:
+                    signer = TimestampSigner(app.config['SECRET_KEY'])
+                    auth_token = signer.sign(user_id)
+                    self.ws.send('UPGRADE:{}'.format(auth_token))
+
+                return user_id
+
             except SignatureExpired:
                 self.on_close('auth token expired')
                 self.ws.send('AUTH')  # tell client to reauth

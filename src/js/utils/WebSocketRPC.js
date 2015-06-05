@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 
 const HEARTBEAT = 'HB';
 const REAUTHENTICATE = 'AUTH';
+const UPGRADE = 'UPGRADE:';
 
 // Mirror socket.io
 const HEARTBEAT_SECS = 15000; // 15 secs
@@ -19,7 +20,8 @@ const EVENTS = new Set([
   'reconnect_error',
   'reconnect_failed',
   'reauthenticate',
-  'destroy'
+  'destroy',
+  'upgrade_auth_token'
 ]);
 
 let emitter = new EventEmitter();
@@ -85,16 +87,28 @@ let connect = (type) => {
     emitter.emit(type);
   };
   websocket.onmessage = (evt) => {
-    // Process but ignore heartbeats
+    // Ignore heartbeats
     receiveHeartbeat();
     if (evt.data === HEARTBEAT) {
       return;
     }
-    if (event.data === REAUTHENTICATE) {
+    // ignore empty responses
+    if (!evt.data) {
+      return;
+    }
+    // The token we have is bad and we need to re-login
+    if (evt.data === REAUTHENTICATE) {
       authExpired = true;
       emitter.emit('reauthenticate');
       return;
     }
+    // Upgrade token (the one we have is old and will expire soon)
+    if (evt.data.substr(0, UPGRADE.length) === UPGRADE) {
+      var authToken = evt.data.substr(UPGRADE.length);
+      emitter.emit('upgrade_auth_token', authToken);
+      return;
+    }
+    // Handle message
     handleMessage.call(this, evt);
   };
   websocket.onerror = (evt) => {
