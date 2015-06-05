@@ -48,8 +48,18 @@ class Base(db.Model):
                               onupdate=db.func.current_timestamp())
 
 
+# Subscription table - all the channels that the user is in currently
+# Favorite flag would be in this table if we were going to support it
 subscription_table = db.Table(
-    'channelsubscription', Base.metadata,
+    'channel_subscription', Base.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('channel_id', db.Integer, db.ForeignKey('channel.id'))
+)
+
+# Invitation table - all the channels the user has access to
+# 1-on-1 chats are lazily created
+invitation_table = db.Table(
+    'channel_invitation', Base.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('channel_id', db.Integer, db.ForeignKey('channel.id'))
 )
@@ -83,9 +93,10 @@ class User(Base):
     email = db.Column(db.String(254))  # RFC-5321
     image_url = db.Column(db.String(2083))  # IE max
 
-    created = db.relationship('Channel', backref='owner')
+    created = db.relationship('Channel', backref='owner', order_by='Channel.name')
     channels = db.relationship('Channel', secondary=subscription_table, backref='users')
     messages = db.relationship('Message', backref='user')
+    invites = db.relationship('Channel', secondary=invitation_table, backref='invited')
 
     # Helpful for debugging
     def __repr__(self):
