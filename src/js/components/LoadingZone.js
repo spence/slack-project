@@ -20,10 +20,10 @@ export default class LoadingZone extends Component {
     return (
       <div id="loading-zone">
         <div id="loading_welcome">
-          <div>
+          <div style={{marginLeft: '-230px'}}>
             <p id="loading_indicator">Loading {this.state.dots}</p>
-            <p id="loading_welcome_msg">There once was an app named Slack.</p>
-            <p id="loading_welcome_author">added by Spencer</p>
+            <p id="loading_welcome_msg" style={{opacity: 1}}>There once was an app named Slack.</p>
+            <p id="loading_welcome_author" style={{opacity: 1}}>added by Spencer</p>
           </div>
         </div>
       </div>

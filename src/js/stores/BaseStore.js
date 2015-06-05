@@ -8,6 +8,7 @@ export default class BaseStore extends EventEmitter {
     super();
     this.register = this.register.bind(this);
     Dispatcher.register(this.register);
+    this.setMaxListeners(200);
   }
 
   register (action) { }

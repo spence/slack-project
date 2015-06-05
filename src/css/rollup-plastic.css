@@ -846,7 +846,7 @@ a.delete_link:hover{color:#870000}
 #batch_delete_div{border:1px solid #DDD;border-radius:.5rem;line-height:1.1rem;margin:.75rem 0;padding:0 .75rem;font-weight:400;font-size:.75rem}
 #batch_delete_div a{font-weight:700}
 @font-face{font-family:appleLogo;src:local("Lucida Grande");unicode-range:U+F8FF}
-body{font-family:Lato,appleLogo,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#555459;line-height:1.5rem}
+body{font-family:Lato,appleLogo,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#555459;}
 h1,h2,h3,h4,h5{font-weight:700;font-family:Lato,appleLogo,sans-serif;margin:0 0 1rem}
 h1{font-size:2rem;line-height:2.5rem;letter-spacing:-1px}
 h2{font-size:1.75rem;line-height:2rem}
@@ -899,7 +899,7 @@ h1.large{font-size:2.25rem;line-height:2.5rem;letter-spacing:-1px}
 }
 @font-face{font-family:appleLogo;src:local("Lucida Grande");unicode-range:U+F8FF}
 body,html{width:100%;overflow-x:hidden}
-body{margin:0;background:#f9f9f9;font-size:18px}
+body{margin:0;font-size:18px}
 html.no_scroll{overflow-y:hidden}
 #page,.log_output,header{width:100%;-webkit-transform:translate3d(0,0,0);-moz-transform:translate3d(0,0,0);-ms-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-transition:-webkit-transform .15s cubic-bezier(.2,.3,.25,.9);-moz-transition:-moz-transform .15s cubic-bezier(.2,.3,.25,.9);transition:transform .15s cubic-bezier(.2,.3,.25,.9)}
 .is_safari_desktop #page,.is_safari_desktop .log_output,.is_safari_desktop header{-webkit-transition:none;-moz-transition:none;transition:none}
@@ -1250,7 +1250,7 @@ label.select:after{content:""}
 .modal .close:hover{opacity:1}
 .modal p{line-height:1.5rem}
 .modal p.mini{line-height:1.25rem}
-.modal-body{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text;padding:2rem 2rem 1rem}
+.modal-body{-webkit-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text;/*padding:2rem 2rem 1rem*/}
 .modal-body.share_dialog{max-height:480px}
 .modal_input_note{font-size:.9rem;color:#9e9ea6;display:block;line-height:1.25rem;margin-top:.5rem}
 .modal-body-scrollable{max-height:450px;overflow-y:scroll!important;overflow-x:hidden;padding-right:1.5rem}

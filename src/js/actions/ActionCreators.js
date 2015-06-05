@@ -3,15 +3,31 @@ import Dispatcher from "../dispatcher/Dispatcher";
 
 export default {
 
-  authenticateUser () {
+  authenticateUser() {
     Dispatcher.dispatch({
       actionType: Constants.ActionTypes.AUTH_USER
     });
   },
 
-  connectChat () {
+  connectChat() {
     Dispatcher.dispatch({
       actionType: Constants.ActionTypes.CONNECT_CHAT
+    });
+  },
+
+  loadUser(user_key) {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.FETCH_USER,
+      user_key: user_key
+    });
+  },
+
+  enterMessage(message_key, content, channel_key) {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.ENTER_MESSAGE,
+      message_key: message_key,
+      content: content,
+      channel_key: channel_key
     });
   }
 

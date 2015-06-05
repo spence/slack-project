@@ -4,7 +4,21 @@ import Dispatcher from '../dispatcher/Dispatcher';
 import Constants from '../constants/Constants';
 import WebSocketRPC from '../utils/WebSocketRPC';
 
+const DEFAULT_CHANNEL = 'general';
+
 let rpc = new WebSocketRPC('wss://slack.projects.spencercreasey.com/chat/');
+
+let _user = {};
+let _channel = {messages: []};
+let _channelList = [];
+let _loaded = false;
+let _channelDict = {};
+let _userDict = {};
+
+let _userReturned = false;
+let _channelReturned = false;
+let _channelListReturned = false;
+let _messageIDs = {};
 
 /**
  * Fired upon connecting.
@@ -13,19 +27,45 @@ rpc.on('connect', () => {
   console.log('connect');
   chatStore.emitChange();
 
-  // _fetchUserChannels();
-  // _fetchCurrentChannel();
-
-  rpc.send('sum', [1, 2], (sum) => {
-    console.log('result of 1 + 1', sum);
+  rpc.send('get-current-user', [], (user) => {
+    console.log('user', user);
+    _userReturned = true;
+    _user = user;
+    // Crappy promise
+    if (_channelListReturned && _channelReturned) {
+      _loaded = true;
+    }
+    _userDict[user.key] = user;
+    chatStore.emitChange();
   });
 
-  rpc.send('sum', [5, 11], (sum) => {
-    console.log('result of 5 + 11', sum);
+  rpc.send('get-channel-list', [], (channelList) => {
+    console.log('channel-list', channelList);
+    _channelListReturned = true;
+    _channelList = channelList;
+    // Crappy promise
+    if (_userReturned && _channelReturned) {
+      _loaded = true;
+    }
+    _channelList.map(function(channel) {
+      _channelDict[channel.name] = channel;
+    })
+    chatStore.emitChange();
   });
 
-  rpc.send('sum', [3, 20], (sum) => {
-    console.log('result of 3 + 20', sum);
+  var name = _channel.name ? _channel.name : DEFAULT_CHANNEL;
+  rpc.send('get-channel', [name], (channel) => {
+    console.log('channel', channel);
+    _channelReturned = true;
+    _channel = channel;
+    // Crappy promise
+    if (_channelListReturned && _userReturned) {
+      _loaded = true;
+    }
+    channel.users.map(function(user) {
+      _userDict[user.username] = user;
+    })
+    chatStore.emitChange();
   });
 
 });
@@ -33,6 +73,15 @@ rpc.on('connect', () => {
 rpc.on('upgrade_auth_token', (authToken) => {
   console.log('new auth token', authToken);
   AuthStore.upgradeAuthToken(authToken);
+});
+
+rpc.on('server:broadcast', (data) => {
+  console.log('broadcast', data);
+  if (data.channel.name == _channel.name) {
+    _channel.messages.push(data.message);
+  }
+  _userDict[data.user.key] = data.user;
+  chatStore.emitChange();
 });
 
 /**
@@ -104,13 +153,6 @@ rpc.on('destroy', () => {
   chatStore.emitChange();
 });
 
-let _fetchUserChannels = () => {
-  // socket.emit('users:all', this.updateUsers.bind(this));
-}
-
-let _fetchCurrentChannel = () => {
-  // socket.emit('users:all', this.updateUsers.bind(this));
-}
 
 let chatStore = new class ChatStore extends BaseStore {
 
@@ -122,15 +164,31 @@ let chatStore = new class ChatStore extends BaseStore {
     return rpc.isConnecting();
   }
 
-  getUserChannels() {
-    return null;
+  getCurrentUser() {
+    return _user;
   }
 
-  getAllChannels() {
-    return null;
+  hasAuthenticationExpired() {
+    return rpc.hasAuthenticationExpired();
   }
 
   getChannel() {
+    return _channel;
+  }
+
+  getChannelList() {
+    return _channelList;
+  }
+
+  isLoaded() {
+    return _loaded;
+  }
+
+  getUser(username) {
+    return _userDict[username];
+  }
+
+  getSearchChannelList() {
     return null;
   }
 
@@ -150,12 +208,12 @@ let chatStore = new class ChatStore extends BaseStore {
     return null;
   }
 
-  hasAuthenticationExpired() {
-    return rpc.hasAuthenticationExpired();
-  }
-
   cleanUpChat() {
     rpc.destroy();
+  }
+
+  getMessageId(message_key) {
+    return _messageIDs[message_key];
   }
 
   register (action) {
@@ -165,6 +223,25 @@ let chatStore = new class ChatStore extends BaseStore {
           rpc.connect();
           chatStore.emitChange();
         }
+        break;
+      case Constants.ActionTypes.FETCH_USER:
+        // Do we have them already?
+        if (action.user_key in _userDict) {
+          chatStore.emitChange();
+        } else {
+          // Fetch them
+          rpc.send('get-user', [action.user_key], (user) => {
+
+            _userDict[user.key] = user;
+            chatStore.emitChange();
+          });
+        }
+        break;
+      case Constants.ActionTypes.ENTER_MESSAGE:
+        rpc.send('send-message', [action.content, action.channel_key], (message_id) => {
+          _messageIDs[action.message_key] = message_id;
+          chatStore.emitChange();
+        });
         break;
     }
   }

@@ -18,7 +18,7 @@ let _authenticateUser = (authStore) => {
     var profile = googleUser.getBasicProfile();
     var user = {
       id_token: googleUser.getAuthResponse().id_token,
-      user_id: googleUser.getId(),
+      auth_id: googleUser.getId(),
       email: profile.getEmail(),
       name: profile.getName(),
       image_url: profile.getImageUrl()
@@ -35,7 +35,7 @@ let _authenticateUser = (authStore) => {
       success (response) {
         _loading = false;
         // Validate & update state
-        if (response.status === 'success' && user.user_id === response.user_id) {
+        if (response.status === 'success' && user.auth_id === response.auth_id) {
           _authToken = response.auth_token;
           _error = false;
         } else {

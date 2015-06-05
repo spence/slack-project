@@ -13,7 +13,15 @@ export default class ChatPage extends Component {
     router: PropTypes.func.isRequired
   }
 
-  state = { connected: true }
+  state = {
+    loading: true,
+    connected: false,
+    connecting: false,
+    authenticationExpired: false,
+    channelList: [],
+    user: {},
+    channel: {}
+  }
 
   static willTransitionTo = (transition, params) => {
     // Check for logged-out users and redirect
@@ -30,7 +38,7 @@ export default class ChatPage extends Component {
     // Clean-up chat
     ChatStore.cleanUpChat();
   }
-
+ 
   componentDidMount () {
     ChatStore.addChangeListener(() => { this.onEvent(); });
   }
@@ -41,6 +49,10 @@ export default class ChatPage extends Component {
 
   onEvent () {
     this.setState({
+      user: ChatStore.getCurrentUser(),
+      loading: !ChatStore.isLoaded(),
+      channel: ChatStore.getChannel(),
+      channelList: ChatStore.getChannelList(),
       connected: ChatStore.isConnected(),
       connecting: ChatStore.isConnecting(),
       authenticationExpired: ChatStore.hasAuthenticationExpired()
@@ -56,12 +68,29 @@ export default class ChatPage extends Component {
   }
 
   render () {
+    var classes = 'container-fluid sidebar_theme_default_theme';
+    if (this.state.loading) {
+      classes += ' loading'
+    }
     return (
-      <div id="client-ui" className="container-fluid sidebar_theme_default_theme">
-        { this.state.connected ? null: <LoadingZone /> }
-        <Header />
-        <Footer />
-        <Body />
+      <div id="client-ui" className={classes} style={{height: '100%'}}>
+        { this.state.loading ? <LoadingZone /> : null }
+        <Header
+          loading={this.state.loading}
+          connected={this.state.connected}
+          user={this.state.user}
+          channel={this.state.channel} />
+        <Footer
+          loading={this.state.loading}
+          connected={this.state.connected}
+          user={this.state.user}
+          channel={this.state.channel} />
+        <Body
+          loading={this.state.loading}
+          connected={this.state.connected}
+          user={this.state.user}
+          channel={this.state.channel}
+          channelList={this.state.channelList} />
       </div>
     );
   }
