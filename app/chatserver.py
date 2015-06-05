@@ -118,43 +118,108 @@ class SlackChatServer(WebSocketApplication):
 
         # RPC
         args = data.get('args')
-        if method == 'message':
-            self.broadcast(message_id, *args)
-        elif method == 'update_clients':
-            self.send_client_list(message_id, *args)
-        elif method == 'add':
-            self.add(message_id, *args)
+
+        # Switch methods
+        if method == 'get-current-user':
+            self.get_current_user(user, message_id, *args)
+        elif method == 'get-channel':
+            self.get_channel(user, message_id, *args)
+        elif method == 'get-channel-list':
+            self.get_channel_list(user, message_id, *args)
+        elif method == 'get-user':
+            self.get_user(user, message_id, *args)
+        elif method == 'send-message':
+            self.send_message(user, message_id, *args)
         else:
             self.ws.send(json.dumps({
                 'id': message_id,
-                'error': 'Unknown "method"'
+                'error': 'Unknown rpc method: {}'.format(method)
             }))
 
-    def add(self, message_id, one, two):
+        db.session.close()
+
+    def get_current_user(self, user, message_id):
         self.ws.send(json.dumps({
             'id': message_id,
-            'value': one + two
+            'value': user.shallow_json(),
         }))
 
-    def send_client_list(self, message):
-        current_client = self.ws.handler.active_client
-        current_client.nickname = message['nickname']
+    def get_channel(self, user, message_id, channel_name):
+        """
+        Channel that is either public or the user has been invited.
+        """
+        channel = models.Channel.query \
+            .outerjoin(models.Channel.invited) \
+            .filter(db.or_(models.User.id == user.id, models.Channel.private == False)) \
+            .filter(models.Channel.name == channel_name) \
+            .first()
 
-        self.ws.send(json.dumps({
-            'msg_type': 'update_clients',
-            'clients': [
-                getattr(c, 'nickname', 'anonymous')
-                for c in self.ws.handler.server.clients.values()
-            ]
-        }))
+        if channel is not None:
+            # Load last 30 messages
+            messages = list(channel.messages.limit(30))
 
-    def broadcast(self, message):
-        for c in self.ws.handler.server.clients.values():
-            c.ws.send(json.dumps({
-                'msg_type': 'message',
-                'nickname': message['nickname'],
-                'message': message['message']
+            channel_json = channel.shallow_json()
+            channel_json['messages'] = [m.shallow_json() for m in reversed(messages)]
+            channel_json['users'] = [u.shallow_json() for u in channel.users]
+
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': channel_json,
             }))
+
+    def get_channel_list(self, user, message_id):
+        self.ws.send(json.dumps({
+            'id': message_id,
+            'value': [c.shallow_json() for c in user.channels],
+        }))
+
+    def get_user(self, _, message_id, user_key):
+        request_user = models.User.query.get(user_key)
+        self.ws.send(json.dumps({
+            'id': message_id,
+            'value': request_user.shallow_json() if request_user else None
+        }))
+
+    def send_message(self, user, message_id, content, channel_id):
+        # Fetch channel in question
+        # Validates if user has permission to submit message to channel
+        channel = models.Channel.query \
+            .outerjoin(models.Channel.invited) \
+            .filter(db.or_(models.User.id == user.id, models.Channel.private == False)) \
+            .filter(models.Channel.id == channel_id) \
+            .first()
+
+        if channel is None:
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'denied': True,
+            }))
+        else:
+            # TODO: mitigate scripting attack
+            message = models.Message(channel_id=channel.id, user_id=user.id, content=content)
+            db.session.add(message)
+            db.session.commit()
+
+            # Confirm message for specific user (releases their input field)
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': message.id,
+            }))
+
+            # Broadcast message to everyone
+            # This is a dumb idea. All users in all channels (even private) get their
+            # messages send to everyone, publicly. I would probably re-init the ws
+            # using a query param or path, specifying my channel (e.g., client.ws.path).
+            self.broadcast(json.dumps({
+                'method': 'broadcast',
+                'channel': channel.shallow_json(),
+                'message': message.shallow_json(),
+                'user': user.shallow_json()
+            }))
+
+    def broadcast(self, obj):
+        for client in self.ws.handler.server.clients.values():
+            client.ws.send(obj)
 
     def on_close(self, reason):
         # print "Connection closed! "

@@ -93,12 +93,23 @@ class User(Base):
 
     created = db.relationship('Channel', backref='owner', order_by='Channel.name')
     channels = db.relationship('Channel', secondary=subscription_table, backref='users')
-    messages = db.relationship('Message', backref='user')
     invites = db.relationship('Channel', secondary=invitation_table, backref='invited')
+    messages = db.relationship('Message', backref='user', order_by='desc(Message.date_created)', lazy='dynamic')
 
     # Helpful for debugging
     def __repr__(self):
         return '<User %r>' % self.name
+
+    def shallow_json(self):
+        return {
+            'key': self.id,
+            'title': self.title,
+            'username': self.username,
+            'name': self.name,
+            'email': self.email,
+            'image_url': self.image_url,
+            'last_online': self.last_online,
+        }
 
 
 class Channel(Base):
@@ -121,9 +132,21 @@ class Channel(Base):
     private = db.Column(db.Boolean, default=False)
     direct = db.Column(db.Boolean, default=False)
 
+    messages = db.relationship('Message', backref='channel', order_by='desc(Message.date_created)', lazy='dynamic')
+
     # Helpful for debugging
     def __repr__(self):
         return '<Channel {}>'.format(self.name)
+
+    def shallow_json(self):
+        return {
+            'key': self.id,
+            'owner_key': self.owner_id,
+            'name': self.name,
+            'description': self.description,
+            'private': self.private,
+            'direct': self.direct,
+        }
 
 
 class Message(Base):
@@ -149,3 +172,12 @@ class Message(Base):
         # Allow 30 characters
         content = self.content if len(self.content) <= 30 else '{}...'.format(self.content[:27])
         return '<Message {}>'.format(content)
+
+    def shallow_json(self):
+        return {
+            'key': self.id,
+            'channel_key': self.channel_id,
+            'user_key': self.user_id,
+            'content': self.content,
+            'ts': self.date_created,
+        }
