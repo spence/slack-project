@@ -17,7 +17,6 @@ export default class Body extends Component {
     var el = $('#msgs_scroller_div');
     if (el[0]) {
       el.scrollTop(el[0].scrollHeight);
-      // el.animate({ scrollTop: el[0].scrollHeight}, 600);
     }
   }
 

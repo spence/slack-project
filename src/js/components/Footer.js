@@ -4,8 +4,6 @@ import Actions from '../actions/ActionCreators';
 
 export default class Footer extends Component {
 
-  // state = { submitting: false, message_key: null }
-
   componentDidMount () {
     ChatStore.addChangeListener(() => { this.onChatEvent(); });
   }
@@ -15,28 +13,22 @@ export default class Footer extends Component {
   }
 
   onChatEvent() {
-    // this.setState({
-    //   submitting: !ChatStore.getMessageId(this.state.message_key)
-    // });
   }
 
   handleSubmit(e) {
-    // Supports sending a single message at a time
     e.preventDefault();
     var el = $('#message-input');
+    // Create unique message key so we can mark our message as sent
     var message_key = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Date.now();
-    // this.setState({
-    //   submitting: true,
-    //   message_key: message_key
-    // });
     Actions.enterMessage(message_key, el.val(), this.props.channel.key);
+    // Clear input value
     el.val('');
   }
 
   render () {
 
     var textareaclasses = 'with-emoji-menu';
-    if (!this.props.connected) { // || this.state.submitting) {
+    if (!this.props.connected) {
       textareaclasses += ' offline'
     }
 
