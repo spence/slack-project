@@ -78,6 +78,7 @@ class SlackChatServer(WebSocketApplication):
         # Mark as online
         user.last_online = datetime.datetime.utcnow()
         db.session.commit()
+        db.session.close()
 
     def on_message(self, message):
         if message is None:
@@ -89,6 +90,7 @@ class SlackChatServer(WebSocketApplication):
 
         # Mark as online
         user.last_online = datetime.datetime.utcnow()
+        db.session.commit()
 
         print "user: {}".format(user.auth_id)
         print repr(message)
@@ -229,6 +231,5 @@ class SlackChatServer(WebSocketApplication):
             client.ws.send(obj)
 
     def on_close(self, reason):
-        # print "Connection closed! "
-        pass
+        db.session.close()
 
