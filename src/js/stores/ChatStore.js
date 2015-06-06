@@ -14,6 +14,7 @@ let _channelList = [];
 let _loaded = false;
 let _channelDict = {};
 let _userDict = {};
+let _userRequested = {};
 
 let _userReturned = false;
 let _channelReturned = false;
@@ -22,12 +23,9 @@ let _messageIDs = {};
 
 let _showCreateChannelModal = false;
 
-/**
- * Fired upon connecting.
- */
-rpc.on('connect', () => {
-  console.log('connect');
-  chatStore.emitChange();
+let _rebuildChannelTimer = null;
+
+let loadChannel = () => {
 
   rpc.send('get-current-user', [], (user) => {
     console.log('user', user);
@@ -65,11 +63,20 @@ rpc.on('connect', () => {
       _loaded = true;
     }
     channel.users.map(function(user) {
-      _userDict[user.username] = user;
+      _userDict[user.key] = user;
     })
     chatStore.emitChange();
   });
 
+}
+
+/**
+ * Fired upon connecting.
+ */
+rpc.on('connect', () => {
+  console.log('connect');
+  loadChannel();
+  chatStore.emitChange();
 });
 
 rpc.on('upgrade_auth_token', (authToken) => {
@@ -146,6 +153,7 @@ rpc.on('disconnect', () => {
  */
 rpc.on('reconnect', (attempt) => {
   console.log('successful reconnect', attempt);
+  loadChannel();
   chatStore.emitChange();
 });
 
@@ -271,10 +279,14 @@ let chatStore = new class ChatStore extends BaseStore {
           chatStore.emitChange();
         } else {
           // Fetch them
-          rpc.send('get-user', [action.user_key], (user) => {
-            _userDict[user.key] = user;
-            chatStore.emitChange();
-          });
+          if (! user.key in _userRequested) {
+            _userRequested[user.key] = true;
+            rpc.send('get-user', [action.user_key], (user) => {
+              _userDict[user.key] = user;
+              delete _userRequested[user.key];
+              chatStore.emitChange();
+            });
+          }
         }
         break;
       case Constants.ActionTypes.ENTER_MESSAGE:
