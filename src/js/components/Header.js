@@ -50,7 +50,6 @@ export default class Header extends Component {
                   <span className="prefix channel"><i className="ts_icon ts_icon_channel"></i></span>
                   {this.props.channel.name}
                 </span>
-                <i id="channel_actions" className="ts_icon ts_icon_chevron_down ts_icon_inherit"></i>
               </h2>
           </div>
           {allowSignOut ?
