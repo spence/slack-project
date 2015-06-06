@@ -1,31 +1,18 @@
 import React, { Component } from 'react';
 import Actions from '../actions/ActionCreators';
-// import ChatStore from '../stores/ChatStore';
 
 export default class CreateChannel extends Component {
 
   state = { private: false }
 
-  // componentDidMount () {
-  //   ChatStore.addChangeListener(() => { this.onChatEvent(); });
-  // }
-
-  // componentWillUnmount () {
-  //   ChatStore.removeChangeListener(() => { this.onChatEvent(); });
-  // }
-
-  // onChatEvent() {
-  //   // Scroll to bottom. 
-  //   var el = $('#msgs_scroller_div');
-  //   if (el[0]) {
-  //     el.scrollTop(el[0].scrollHeight);
-  //   }
-  // }
-
-  handlePrivateChange() {
+  handlePrivateCheckboxChange() {
     this.setState({
       private: !this.state.private
     });
+  }
+
+  handleCreateChannel() {
+    console.log('create');
   }
 
   closeModal() {
@@ -69,13 +56,15 @@ export default class CreateChannel extends Component {
                   <span className="modal_input_note">Give your channel a purpose that describes what it will be used for.</span>
               </p>
               <p>
-                  <input id="channel_private" defaultChecked={this.state.private} onChange={this.handlePrivateChange} type="checkbox" className="small_right_margin" style={{marginLeft: '127px'}} />
+                  <input id="channel_private" defaultChecked={this.state.private} onChange={this.handlePrivateCheckboxChange} type="checkbox" className="small_right_margin" style={{marginLeft: '127px'}} />
                   <label htmlFor="channel_private" className="checkbox no_margin" className="inline_block" style={{marginLeft: '-7px', width: '170px'}}> This is a private group.</label>
               </p>
           </div>
           <div className="modal-footer">
               <a className="btn btn_outline dialog_cancel" onClick={this.closeModal}>Cancel</a>
-              <button className="btn dialog_go ladda-button" data-style="expand-right"><span className="ladda-label">Create Channel</span><span className="ladda-spinner"></span></button>
+              <button className="btn dialog_go ladda-button" data-style="expand-right" onClick={() => { this.handleCreateChannel(); }}>
+                <span className="ladda-label">Create Channel</span><span className="ladda-spinner"></span>
+              </button>
           </div>
       </div>
 
