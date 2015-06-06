@@ -78,6 +78,13 @@ class SlackChatServer(WebSocketApplication):
         # Mark as online
         user.last_online = datetime.datetime.utcnow()
         db.session.commit()
+
+        # Let everyone else know this user is online
+        self.broadcast(json.dumps({
+            'server': 'login',
+            'user': user.shallow_json()
+        }))
+
         db.session.close()
 
     def on_message(self, message):
@@ -228,8 +235,16 @@ class SlackChatServer(WebSocketApplication):
 
     def broadcast(self, obj):
         for client in self.ws.handler.server.clients.values():
-            client.ws.send(obj)
+            if not client.ws.closed:
+                client.ws.send(obj)
 
     def on_close(self, reason):
-        db.session.close()
 
+        # Since we cant access the user object from here and let other clients
+        # know who logged out, we just send a logout message so each client can
+        # request user online status
+        self.broadcast(json.dumps({
+            'server': 'logout'
+        }))
+
+        db.session.close()

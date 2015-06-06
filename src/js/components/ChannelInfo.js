@@ -29,11 +29,12 @@ export default class ChannelInfo extends Component {
                                           <div id="channel_page_all_members">
                                             {this.props.channel.users.map(function(user) {
                                               var bg = 'url(\'' + user.image_url + '\')';
+                                              var onlineClass = user.online ? 'active' : 'away';
                                               return (
-                                                <div className="channel_page_member_row overflow_ellipsis active" key={user.key}>
+                                                <div className={'channel_page_member_row overflow_ellipsis ' + onlineClass} key={user.key}>
                                                     <a className="lazy member_preview_link member_image thumb_20" data-member-id={user.key} data-thumb-size="20"
                                                        style={{backgroundImage: bg, backgroundColor: 'rgb(246, 246, 246)'}} aria-hidden="true"></a>
-                                                    <span className="presence active" title="active">
+                                                    <span className={'presence ' + onlineClass} title={onlineClass}>
                                                         <i className="ts_icon ts_icon_presence_online presence_icon"></i>
                                                     </span>&nbsp;
                                                     <a data-member-id="U024FSSEZ">{user.name}</a>

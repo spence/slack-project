@@ -2,6 +2,8 @@
 Models for our chat room.
 """
 
+import datetime
+
 from app import db, app
 
 # Identify initial channel by name. Skip thinking about renaming this channel.
@@ -111,7 +113,7 @@ class User(Base):
             'name': self.name,
             'email': self.email,
             'image_url': self.image_url,
-            'last_online': self.last_online,
+            'online': (datetime.datetime.utcnow() - self.last_online).total_seconds() < 15
         }
 
 

@@ -9,7 +9,7 @@ const DEFAULT_CHANNEL = 'general';
 let rpc = new WebSocketRPC('wss://slack.projects.spencercreasey.com/chat/');
 
 let _user = {};
-let _channel = {messages: []};
+let _channel = {messages: [], users: []};
 let _channelList = [];
 let _loaded = false;
 let _channelDict = {};
@@ -77,13 +77,50 @@ rpc.on('upgrade_auth_token', (authToken) => {
   AuthStore.upgradeAuthToken(authToken);
 });
 
-rpc.on('server:broadcast', (data) => {
-  console.log('broadcast', data);
+rpc.on('server:message', (data) => {
+  console.log('broadcast message', data);
   if (data.channel.name == _channel.name) {
     _channel.messages.push(data.message);
   }
   _userDict[data.user.key] = data.user;
   chatStore.emitChange();
+});
+
+rpc.on('server:login', (data) => {
+  console.log('broadcast login', data);
+  _userDict[data.user.key] = data.user;
+  _channel.users.map(function(user) {
+    if (user.key === data.user.key) {
+      user.online = true;
+    }
+  });
+  chatStore.emitChange();
+});
+
+rpc.on('server:logout', (data) => {
+  console.log('broadcast logout', data);
+  // Someone logged out, but since the server cant tell us (bleh), we just
+  // requery channel after the 15 sec timeout (16 to be sure).
+  if (_rebuildChannelTimer !== null) {
+    clearInterval(_rebuildChannelTimer);
+  }
+  _rebuildChannelTimer = setTimeout(() => {
+    _rebuildChannelTimer = null;
+    // Really should just have a get-users since this is hacky but works :)
+    var name = _channel.name ? _channel.name : DEFAULT_CHANNEL;
+    rpc.send('get-channel', [name], (channel) => {
+      console.log('channel', channel);
+      channel.users.map((user) => {
+        _userDict[user.key] = user;
+      });
+      _channel.users.map((user) => {
+        if (user.key in _userDict) {
+          user.online = _userDict[user.key].online;
+        }
+      });
+      chatStore.emitChange();
+    });
+  }, 16000);
 });
 
 /**
