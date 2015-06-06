@@ -37,11 +37,6 @@ export default class ChatPage extends Component {
     }
   }
 
-  static willTransitionFrom = (transition, component) => {
-    // Clean-up chat
-    ChatStore.cleanUpChat();
-  }
- 
   componentDidMount () {
     ChatStore.addChangeListener(() => { this.onEvent(); });
   }

@@ -11,9 +11,8 @@ export default class Header extends Component {
   }
 
   handleSignOut() {
-    ChatStore.cleanUpChat();
+    // Clear auth and RPC
     Actions.signOut();
-    // AuthStore.clearAuthentication();
     // redirect to login
     var { router } = this.context;
     router.transitionTo('/login');

@@ -135,7 +135,8 @@ rpc.on('error', (error) => {
  * Fired upon a disconnection.
  */
 rpc.on('disconnect', () => {
-  console.log('disconnect');
+  console.log('chatstore', 'disconnect');
+  _loaded = false;
   chatStore.emitChange();
 });
 
@@ -188,7 +189,8 @@ rpc.on('reauthenticate', () => {
 });
 
 rpc.on('destroy', () => {
-  console.log('destroy');
+  console.log('chatstore', 'destroy');
+  _loaded = false;
   chatStore.emitChange();
 });
 
@@ -247,10 +249,6 @@ let chatStore = new class ChatStore extends BaseStore {
     return null;
   }
 
-  cleanUpChat() {
-    rpc.destroy();
-  }
-
   getMessageId(message_key) {
     return _messageIDs[message_key];
   }
@@ -292,6 +290,10 @@ let chatStore = new class ChatStore extends BaseStore {
       case Constants.ActionTypes.CLOSE_CREATE_CHANNEL:
         _showCreateChannelModal = false;
         chatStore.emitChange();
+        break;
+      case Constants.ActionTypes.SIGN_OUT:
+        rpc.destroy();
+        _loaded = false;
         break;
       case Constants.ActionTypes.LEAVE_CHANNEL:
         console.log('TODO: leave channel');

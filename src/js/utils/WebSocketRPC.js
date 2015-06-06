@@ -8,7 +8,7 @@ const UPGRADE = 'UPGRADE:';
 // Mirror socket.io
 const HEARTBEAT_SECS = 15000; // 15 secs
 const HEARTBEAT_TIMEOUT_SECS = 20000; // 20 secs
-const RECONNECT_SECS = 5000; // 10 secs
+const RECONNECT_SECS = 5000; // 5 secs
 
 const EVENTS = new Set([
   'connect',
@@ -43,9 +43,9 @@ let handleMessage = function(evt) {
   if (data.error !== undefined && data.error !== null) {
     // Handle errors from the server
     emitter.emit('error', data.error, evt);
-  } else if (data.method) {
+  } else if (data.server) {
     // Handle server push data
-    emitter.emit('server:' + data.method, data);
+    emitter.emit('server:' + data.server, data);
   } else if (data.id === undefined || data.id === null) {
     // Handle invalid responses from the server
     emitter.emit('error', 'Missing \'id\' from message.', evt);
@@ -138,6 +138,8 @@ let destroy = () => {
   clearInterval(connectTimer);
   connecting = false;
   connected = false;
+  websocket.onclose = function() {};
+  websocket.close();
   websocket = null;
   emitter.emit('destroy');
 }

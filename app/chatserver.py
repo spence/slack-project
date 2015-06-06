@@ -227,7 +227,7 @@ class SlackChatServer(WebSocketApplication):
             # messages send to everyone, publicly. I would probably re-init the ws
             # using a query param or path, specifying my channel (e.g., client.ws.path).
             self.broadcast(json.dumps({
-                'method': 'broadcast',
+                'server': 'message',
                 'channel': channel.shallow_json(),
                 'message': message.shallow_json(),
                 'user': user.shallow_json()
