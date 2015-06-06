@@ -38,7 +38,7 @@ def gauth_signin():
         auth_id = request.form['auth_id']
         email = request.form.get('email')
         name = request.form.get('name')
-        image_url = request.form.get('image_url')
+        image_url = request.form.get('image_url', 'https://ssl.webpack.de/lorempixel.com/96/96/cats/')
         idinfo = client.verify_id_token(id_token, app.config['GAUTH_CLIENT_ID'])
         # If multiple clients access the backend server:
         if idinfo['aud'] != app.config['GAUTH_CLIENT_ID']:
