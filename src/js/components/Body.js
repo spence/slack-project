@@ -35,7 +35,6 @@ export default class Body extends Component {
     return (
       <div id="client_body" style={{height: '100%'}}>
           <div id="col_messages" style={{height: '100%'}}>
-            {!this.props.loading ? (
               <div className="row-fluid" style={{height: '100%'}}>
                   <div id="col_channels_bg" style={{height: '100%', top: '0px', zIndex: 0}}></div>
                   <div id="col_channels" style={{height: '100%', overflowY: 'scroll'}} className="show_presence channels_list_holder no_just_unreads real_names">
@@ -43,6 +42,7 @@ export default class Body extends Component {
                       <div id="monkey_scroll_wrapper_for_channels_scroller" className="monkey_scroll_wrapper">
                           <div className="monkey_scroll_hider " style={{width: '203px', marginRight: '17px'}}>
                               <div id="channels_scroller" className="monkey_scroller" style={{height: '100%', visibility: 'visible', width: '220px'}}>
+                                {!this.props.loading ? (<div>
                                   <div id="channels" className="section_holder">
                                       <span id="new_channel_btn" onClick={this.onClickCreateChannel} className="ts_icon ts_icon_plus_circle channels_list_new_btn" data-toggle="tooltip" title="" data-original-title="Create new channel"></span>
                                       <h2 id="channels_header" className="hoverable">
@@ -112,6 +112,7 @@ export default class Body extends Component {
                                       </ul>
                                       <div className="clear_both"></div>
                                   </div>
+                                </div>) : null} 
                               </div>
                           </div>
                       </div>
@@ -131,6 +132,7 @@ export default class Body extends Component {
                       <div id="monkey_scroll_wrapper_for_msgs_scroller_div" className="monkey_scroll_wrapper" style={{height: '100%'}}>
                           <div className="monkey_scroll_hider " style={{marginRight: chatMarginRight, height: '100%'}}>
                               <div id="msgs_scroller_div" tabIndex="1" className="monkey_scroller" style={{height: '100%'}}>
+                                {!this.props.loading ? (<div>
                                   <div id="end_div" className="relative mini" style={{height: '324px'}}>
                                       <div id="end_display_div" className="relative">
                                           <div id="end_display_padder" style={{height: '149px'}}></div>
@@ -204,6 +206,7 @@ export default class Body extends Component {
                                       })}
                                   </div>
                                   <div id="msgs_overlay_div" className="hidden" style={{opacity: 0}}></div>
+                                </div>) : null} 
                               </div>
                           </div>
                       </div>
@@ -225,7 +228,7 @@ export default class Body extends Component {
                       </div>
                   </div>
               </div>
-            ) : null} 
+            ) : null}
           </div>
       </div>
     );
