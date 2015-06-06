@@ -26,6 +26,12 @@ export default class Body extends Component {
   }
 
   render () {
+
+    var chatMarginRight = '17px';
+    if (!this.props.channel.private) {
+      chatMarginRight = '256px';
+    }
+
     return (
       <div id="client_body" style={{height: '100%'}}>
           <div id="col_messages" style={{height: '100%'}}>
@@ -123,8 +129,8 @@ export default class Body extends Component {
                           </div>
                       </div>
                       <div id="monkey_scroll_wrapper_for_msgs_scroller_div" className="monkey_scroll_wrapper" style={{height: '100%'}}>
-                          <div className="monkey_scroll_hider " style={{width: '1443px', marginRight: '17px', height: '100%'}}>
-                              <div id="msgs_scroller_div" tabIndex="1" className="monkey_scroller" style={{height: '100%', width: '1460px'}}>
+                          <div className="monkey_scroll_hider " style={{marginRight: chatMarginRight, height: '100%'}}>
+                              <div id="msgs_scroller_div" tabIndex="1" className="monkey_scroller" style={{height: '100%'}}>
                                   <div id="end_div" className="relative mini" style={{height: '324px'}}>
                                       <div id="end_display_div" className="relative">
                                           <div id="end_display_padder" style={{height: '149px'}}></div>
@@ -187,7 +193,7 @@ export default class Body extends Component {
                                       </div>
                                   </div>
                                   <div id="msgs_div" className="msgs_holder" style={{paddingBottom: '127px'}}>
-                                      <div className="day_divider" id="day_divider_1433443515_000002" data-date="June 4th, 2015" data-ts="1433443515.000002">
+                                      <div style={{display: 'none'}} className="day_divider" id="day_divider_1433443515_000002" data-date="June 4th, 2015" data-ts="1433443515.000002">
                                           <hr role="separator" aria-hidden="true"/><i className="copy_only"><br/>----- </i>
                                           <div className="day_divider_label" aria-label="Today">Today </div><i className="copy_only"> June 4th, 2015 -----</i>
                                       </div>
