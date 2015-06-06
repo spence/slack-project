@@ -20,6 +20,8 @@ let _channelReturned = false;
 let _channelListReturned = false;
 let _messageIDs = {};
 
+let _showCreateChannelModal = false;
+
 /**
  * Fired upon connecting.
  */
@@ -216,6 +218,10 @@ let chatStore = new class ChatStore extends BaseStore {
     return _messageIDs[message_key];
   }
 
+  showCreateChannelModal() {
+    return _showCreateChannelModal;
+  }
+
   register (action) {
     switch (action.actionType) {
       case Constants.ActionTypes.CONNECT_CHAT:
@@ -231,7 +237,6 @@ let chatStore = new class ChatStore extends BaseStore {
         } else {
           // Fetch them
           rpc.send('get-user', [action.user_key], (user) => {
-
             _userDict[user.key] = user;
             chatStore.emitChange();
           });
@@ -242,6 +247,14 @@ let chatStore = new class ChatStore extends BaseStore {
           _messageIDs[action.message_key] = message_id;
           chatStore.emitChange();
         });
+        break;
+      case Constants.ActionTypes.OPEN_CREATE_CHANNEL:
+        _showCreateChannelModal = true;
+        chatStore.emitChange();
+        break;
+      case Constants.ActionTypes.CLOSE_CREATE_CHANNEL:
+        _showCreateChannelModal = false;
+        chatStore.emitChange();
         break;
       case Constants.ActionTypes.LEAVE_CHANNEL:
         console.log('TODO: leave channel');

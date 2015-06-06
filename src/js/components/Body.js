@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ChatStore from '../stores/ChatStore';
 import Message from './Message';
+import Actions from '../actions/ActionCreators';
 
 export default class Body extends Component {
 
@@ -20,6 +21,10 @@ export default class Body extends Component {
     }
   }
 
+  onClickCreateChannel() {
+    Actions.openCreateChannelModel();
+  }
+
   render () {
     return (
       <div id="client_body" style={{height: '100%'}}>
@@ -33,7 +38,7 @@ export default class Body extends Component {
                           <div className="monkey_scroll_hider " style={{width: '203px', marginRight: '17px'}}>
                               <div id="channels_scroller" className="monkey_scroller" style={{height: '100%', visibility: 'visible', width: '220px'}}>
                                   <div id="channels" className="section_holder">
-                                      <span id="new_channel_btn" className="ts_icon ts_icon_plus_circle channels_list_new_btn" data-toggle="tooltip" title="" data-original-title="Create new channel"></span>
+                                      <span id="new_channel_btn" onClick={this.onClickCreateChannel} className="ts_icon ts_icon_plus_circle channels_list_new_btn" data-toggle="tooltip" title="" data-original-title="Create new channel"></span>
                                       <h2 id="channels_header" className="hoverable">
                                           <span className="channel_list_header_label" data-toggle="tooltip" title="" data-original-title="Browse all channels">Channels</span>
                                       </h2>
@@ -179,68 +184,6 @@ export default class Body extends Component {
                                                   <i className="ts_icon ts_icon_comment_o "></i> Your team has more than 10,000 messages in its archive, so although there are older messages than are shown below, you cant see them. <a href="/pricing" target="_blank" className="bold">Find out more about upgrading your team.</a>
                                               </div>
                                           </div>
-                                          <div id="end_display_welcome" className="hidden">
-                                              <div id="end_display_welcome_general_div" className="hidden">
-                                                  <div id="welcome_slide_1" className="hidden welcome_slide">
-                                                      <h1 style={{color: '#443642'}} className="align_center no_padding">
-                                                      Welcome to<br/>
-                                                      <img src="https://slack.global.ssl.fastly.net/66b5/img/landing_slack_hash_wordmark_logo.png" alt="Slack" id="welcome_slide_slack_logo" />
-                                                  </h1>
-                                                      <p>Slack brings all your team communication into one place, makes it all instantly searchable and available wherever you go.</p>
-                                                      <p>Our aim is to make your working life simpler, more pleasant and more productive.</p>
-                                                  </div>
-                                                  <div id="welcome_slide_2" className="hidden welcome_slide">
-                                                      <h1 className="align_center">Synced &amp; Searchable</h1>
-                                                      <p>Communication in Slack happens in public channels, direct messages and private groups.</p>
-                                                      <p>Everything is indexed, archived and synced across devices so you can always pick up exactly where you left off.</p>
-                                                  </div>
-                                                  <div id="welcome_slide_3" className="welcome_slide" style={{opacity: 100}}>
-                                                      <h1 className="align_center">Youre Ready to Go</h1>
-                                                      <p>Install the apps for <a href="/apps" target="new">Mac, iPhone/iPad, Android, and PC</a> for full access to your archives, easy file uploading &amp; messaging and notifications on the go.</p>
-                                                      <p id="welcome_slide_app_icons" className="align_center">
-                                                          <span className="column apple">
-                                                          <a href="https://itunes.apple.com/app/slack-app/id618783545?ls=1&amp;mt=8" target="new">
-                                                              <img src="https://slack.global.ssl.fastly.net/0dc1/img/icons/ios-96.png" style={{width: '48px', height: '48px'}} /><br/>
-                                                              iOS
-                                                          </a>
-                                                      </span>
-                                                          <span className="column android">
-                                                          <a href="https://play.google.com/store/apps/details?id=com.Slack" target="new">
-                                                              <img src="https://slack.global.ssl.fastly.net/4d58/img/icons/android-xhdpi.png" style={{width: '48px', height: '48px'}}/><br/>
-                                                              Android
-                                                          </a>
-                                                      </span>
-                                                          <span className="column">
-                                                              <a href="https://itunes.apple.com/app/slack/id803453959?ls=1&amp;mt=12" target="new">
-                                                                  <span className="platform_icon finder_icon" style={{width: '54px', height: '58px'}}></span> Mac
-                                                          </a>
-                                                          </span>
-                                                          <span className="column">                                                   
-                                                          <a href="/ssb/download-win" target="new">
-                                                              <span className="platform_icon windows_icon" style={{width: '54px', height: '58px'}}></span> Windows
-                                                          </a>
-                                                          </span>
-                                                      </p>
-                                                      <p>If you have feedback or need any help, we are standing by: use the <a href="/help" target="new">help</a> and <a href="/help/contact" target="new">feedback page</a> or just send an email to <a href="mailto:feedback@slack.com" target="new">feedback@slack.com</a>.</p>
-                                                  </div>
-                                                  <div id="welcome_slides_dots" className="hidden">
-                                                      <a data-slide="1">•</a>
-                                                      <a data-slide="2">•</a>
-                                                      <a data-slide="3" className="active">•</a>
-                                                  </div>
-                                                  <div id="welcome_slides_nav" className="">
-                                                      <a className="btn btn_outline welcome_slides_back hidden">Back</a>
-                                                      <a className="btn welcome_slides_continue hidden">Continue</a>
-                                                      <a className="btn welcome_slides_done hidden">Got it!</a>
-                                                  </div>
-                                                  <div className="is_limited_div is_limited_copy hidden mini">
-                                                      <i className="ts_icon ts_icon_comment_o "></i> Your team has more than 10,000 messages in its archive, so although there are older messages than are shown below, you cant see them.
-                                                      <br/><a href="/pricing" target="_blank">Find out more about upgrading your team.</a>
-                                                  </div>
-                                                  <div id="scroll_to_general_bottom" className="align_center"></div>
-                                              </div>
-                                          </div>
-                                          <div id="end_display_status" className="hidden" aria-live="polite" aria-atomic="true"></div>
                                       </div>
                                   </div>
                                   <div id="msgs_div" className="msgs_holder" style={{paddingBottom: '127px'}}>

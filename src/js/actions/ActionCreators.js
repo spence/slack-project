@@ -29,6 +29,19 @@ export default {
       content: content,
       channel_key: channel_key
     });
+  },
+
+  openCreateChannelModel() {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.OPEN_CREATE_CHANNEL
+    });
+  },
+
+  closeCreateChannelModel() {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.CLOSE_CREATE_CHANNEL
+    });
+  },
 
   signOut() {
     Dispatcher.dispatch({
