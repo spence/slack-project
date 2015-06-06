@@ -143,8 +143,11 @@ rpc.on('error', (error) => {
  */
 rpc.on('disconnect', () => {
   console.log('chatstore', 'disconnect');
-  _loaded = false;
-  chatStore.emitChange();
+  // Only fire when we were already loaded
+  if (_loaded) {
+    _loaded = false;
+    chatStore.emitChange();
+  }
 });
 
 /**
@@ -162,7 +165,6 @@ rpc.on('reconnect', (attempt) => {
  */
 rpc.on('reconnect_attempt', (attempt) => {
   console.log('reconnect_attempt', attempt);
-  chatStore.emitChange();
 });
 
 /**
@@ -171,7 +173,6 @@ rpc.on('reconnect_attempt', (attempt) => {
  */
 rpc.on('reconnecting', () => {
   console.log('reconnecting');
-  chatStore.emitChange();
 });
 
 /**
@@ -180,7 +181,6 @@ rpc.on('reconnecting', () => {
  */
 rpc.on('reconnect_error', (error) => {
   console.log('reconnect_error', error);
-  chatStore.emitChange();
 });
 
 /**
@@ -188,18 +188,21 @@ rpc.on('reconnect_error', (error) => {
  */
 rpc.on('reconnect_failed', (error) => {
   console.log('reconnect_failed', error);
-  chatStore.emitChange();
 });
 
 rpc.on('reauthenticate', () => {
   console.log('reauthenticate');
+  // There will be a change to rpc.hasAuthenticationExpired()
   chatStore.emitChange();
 });
 
 rpc.on('destroy', () => {
   console.log('chatstore', 'destroy');
-  _loaded = false;
-  chatStore.emitChange();
+  // Only fire when we were already loaded
+  if (_loaded) {
+    _loaded = false;
+    chatStore.emitChange();
+  }
 });
 
 
