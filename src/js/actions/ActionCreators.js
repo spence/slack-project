@@ -29,6 +29,17 @@ export default {
       content: content,
       channel_key: channel_key
     });
+
+  signOut() {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.SIGN_OUT
+    });
+  },
+
+  leaveChannel(channel_key) {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.LEAVE_CHANNEL
+    });
   }
 
 };

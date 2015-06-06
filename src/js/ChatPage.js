@@ -6,6 +6,8 @@ import LoadingZone from './components/LoadingZone';
 import AuthStore from './stores/AuthStore';
 import ChatStore from './stores/ChatStore';
 import Actions from './actions/ActionCreators';
+import CreateChannel from './components/CreateChannel';
+import ChannelInfo from './components/ChannelInfo';
 
 export default class ChatPage extends Component {
 
@@ -20,7 +22,8 @@ export default class ChatPage extends Component {
     authenticationExpired: false,
     channelList: [],
     user: {},
-    channel: {}
+    channel: {},
+    showCreateChannel: false
   }
 
   static willTransitionTo = (transition, params) => {
@@ -55,7 +58,8 @@ export default class ChatPage extends Component {
       channelList: ChatStore.getChannelList(),
       connected: ChatStore.isConnected(),
       connecting: ChatStore.isConnecting(),
-      authenticationExpired: ChatStore.hasAuthenticationExpired()
+      authenticationExpired: ChatStore.hasAuthenticationExpired(),
+      showCreateChannel: ChatStore.showCreateChannelModal()
     });
     // Check for failure to reconnect due to authentication
     if (!this.state.authenticationExpired) {
@@ -75,6 +79,7 @@ export default class ChatPage extends Component {
     return (
       <div id="client-ui" className={classes} style={{height: '100%'}}>
         { this.state.loading ? <LoadingZone /> : null }
+        { this.state.showCreateChannel ? <CreateChannel /> : null }
         <Header
           loading={this.state.loading}
           connected={this.state.connected}
@@ -91,6 +96,9 @@ export default class ChatPage extends Component {
           user={this.state.user}
           channel={this.state.channel}
           channelList={this.state.channelList} />
+        <ChannelInfo
+          loading={this.state.loading}
+          channel={this.state.channel} />
       </div>
     );
   }

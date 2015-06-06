@@ -61,6 +61,9 @@ let authStore = new class AuthStore extends BaseStore {
       case Constants.ActionTypes.AUTH_USER:
         _authenticateUser(this);
         break;
+      case Constants.ActionTypes.SIGN_OUT:
+        this.clearAuthentication();
+        break;
     }
   }
 
@@ -84,10 +87,11 @@ let authStore = new class AuthStore extends BaseStore {
     _authToken = null;
     _loading = false;
     _error = false;
+    document.cookie = 'auth_token=0; domain=.slack.projects.spencercreasey.com; path=/; secure; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
 
   upgradeAuthToken(authToken) {
-    _authToken = authToken
+    _authToken = authToken;
     // Set cookie (dont worry about expires for now -- server handles that)
     document.cookie = 'auth_token=' + authToken + '; domain=.slack.projects.spencercreasey.com; path=/; secure;'
   }

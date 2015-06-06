@@ -243,6 +243,9 @@ let chatStore = new class ChatStore extends BaseStore {
           chatStore.emitChange();
         });
         break;
+      case Constants.ActionTypes.LEAVE_CHANNEL:
+        console.log('TODO: leave channel');
+        break;
     }
   }
 

@@ -20,7 +20,7 @@ export default class Header extends Component {
     if (user) {
       this.setState({
         user: user
-      })
+      });
     }
   }
 
