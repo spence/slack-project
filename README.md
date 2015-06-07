@@ -7,6 +7,12 @@ Build AWS AMI
 # Build app
 gulp release
 
+# Map secrets to path
+rm -rf certificates
+rm -rf env.sh
+ln -s ../certificates certificates
+ln -s ../env.sh env.sh
+
 # Tar workspace
 (cd .. &&
  COPYFILE_DISABLE=1 tar czfh app.tar.gz \
@@ -21,7 +27,7 @@ gulp release
 (cd packer && packer build -var "aws_access_key=$(aws configure get aws_access_key_id)" -var "aws_secret_key=$(aws configure get me.aws_secret_access_key)" ubuntu.json)
 ```
 
-Launch image via AWS console. There is no SSL termination deployed here. ELB takes care of that.
+Launch image via AWS console. ELB doesn't support websockets, so if we want SSL we need to terminate in app.
 
 # Running locally (Mac OSX 10.10)
 
@@ -54,13 +60,4 @@ sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 sudo -- sh -c "echo \"127.0.0.0 slack.projects.spencercreasey.com\" >> /etc/hosts"
 
 # Lastly, open browser to https://slack.projects.spencercreasey.com
-```
-
-# Using real cert (ignore)
-```bash
-# Map secrets to path
-rm -rf certificates
-rm -rf env.sh
-ln -s ../certificates certificates
-ln -s ../env.sh env.sh
 ```
