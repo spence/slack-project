@@ -1,17 +1,18 @@
 """
 Settings file for our app.
 """
+import os
 
-# Because we're not in production
-DEBUG = True
+DEBUG = False
 
 # Connection string to local MySQL
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://slackuser:Y4LU3ZxdMD8aL@localhost/slack'
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@localhost/slack'.format(
+    os.environ['MYSQL_USER'], os.environ['MYSQL_PASS'])
 DATABASE_CONNECT_OPTIONS = {'charset': 'utf8mb4', 'use_unicode': 1}
 
 # Google ID Authentication
 # (this is a personal token for use only in this project)
-GAUTH_CLIENT_ID = '867427487654-4o9ugpqmst50dscliec6d95mokh0k2j1.apps.googleusercontent.com'
+GAUTH_CLIENT_ID = os.environ['GAUTH_CLIENT_ID']
 
 # Validate origin for WS and XHR
 AUTH_ORIGIN = 'https://slack.projects.spencercreasey.com'
@@ -25,7 +26,7 @@ CSRF_ENABLED = True
 CSRF_SESSION_KEY = "secret"
 
 # Random bits for creating session cookies
-SECRET_KEY = "rWpEAVAWVQnY{7=@D72TRwgJJNiK"
+SECRET_KEY = os.environ['GAUTH_CLIENT_ID']
 
 # Length of session auth token
 AUTH_TOKEN_SECONDS = 60 * 60 * 24 * 7          # 1 week
