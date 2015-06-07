@@ -146,6 +146,14 @@ class SlackChatServer(WebSocketApplication):
             self.get_user(user, message_id, *args)
         elif method == 'send-message':
             self.send_message(user, message_id, *args)
+        elif method == 'create-channel':
+            self.create_channel(user, message_id, *args)
+        elif method == 'get-all-channel-list':
+            self.get_all_channel_list(user, message_id, *args)
+        elif method == 'enter-channel':
+            self.enter_channel(user, message_id, *args)
+        elif method == 'leave-channel':
+            self.leave_channel(user, message_id, *args)
         else:
             self.ws.send(json.dumps({
                 'id': message_id,
@@ -189,6 +197,16 @@ class SlackChatServer(WebSocketApplication):
             'value': [c.shallow_json() for c in user.channels],
         }))
 
+    def get_all_channel_list(self, user, message_id):
+        channels = models.Channel.query \
+            .outerjoin(models.Channel.invited) \
+            .filter(db.or_(models.User.id == user.id, models.Channel.private == False)) \
+            .all()
+        self.ws.send(json.dumps({
+            'id': message_id,
+            'value': [c.shallow_json() for c in channels],
+        }))
+
     def get_user(self, _, message_id, user_key):
         request_user = models.User.query.get(user_key)
         self.ws.send(json.dumps({
@@ -208,10 +226,11 @@ class SlackChatServer(WebSocketApplication):
         if channel is None:
             self.ws.send(json.dumps({
                 'id': message_id,
-                'denied': True,
+                'value': {
+                    'denied': True,
+                }
             }))
         else:
-            # TODO: mitigate scripting attack
             message = models.Message(channel_id=channel.id, user_id=user.id, content=content)
             db.session.add(message)
             db.session.commit()
@@ -231,6 +250,107 @@ class SlackChatServer(WebSocketApplication):
                 'channel': channel.shallow_json(),
                 'message': message.shallow_json(),
                 'user': user.shallow_json()
+            }))
+
+    def enter_channel(self, user, message_id, channel_id):
+        channel = models.Channel.query \
+            .outerjoin(models.Channel.invited) \
+            .filter(db.or_(models.User.id == user.id, models.Channel.private == False)) \
+            .filter(models.Channel.id == channel_id) \
+            .first()
+        if channel is None:
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': {
+                    'success': False,
+                }
+            }))
+
+        channel.users.append(user)
+        db.session.commit()
+
+        self.ws.send(json.dumps({
+            'id': message_id,
+            'value': {
+                'success': True,
+            }
+        }))
+
+        self.broadcast(json.dumps({
+            'server': 'enter',
+            'channel': channel.shallow_json(),
+            'user': user.shallow_json(),
+        }))
+
+    def leave_channel(self, user, message_id, channel_id):
+        channel = models.Channel.query \
+            .outerjoin(models.Channel.invited) \
+            .filter(db.or_(models.User.id == user.id, models.Channel.private == False)) \
+            .filter(models.Channel.id == channel_id) \
+            .first()
+        if channel is None:
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': {
+                    'success': False,
+                }
+            }))
+
+        channel.users.remove(user)
+        db.session.commit()
+
+        self.ws.send(json.dumps({
+            'id': message_id,
+            'value': {
+                'success': True,
+            }
+        }))
+
+        self.broadcast(json.dumps({
+            'server': 'leave',
+            'channel': channel.shallow_json(),
+            'user': user.shallow_json(),
+        }))
+
+    def create_channel(self, user, message_id, name, description, private):
+        # Check if name is free
+        if models.Channel.query.filter_by(name=name).first() is not None:
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': {
+                    'success': False,
+                    'validation': 'Name is already taken.',
+                }
+            }))
+        elif name == '' or name is None or len(name) > 21:
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': {
+                    'success': False,
+                    'validation': 'Invalid name.',
+                }
+            }))
+        else:
+            # Create new channel and relationships
+            channel = models.Channel(
+                name=name,
+                description=description,
+                private=private,
+                direct=False,
+                owner=user,
+                users=[user],  # subscribe user to channel
+            )
+            db.session.add(channel)
+            if private:
+                user.invites.append(channel)
+            db.session.commit()
+
+            self.ws.send(json.dumps({
+                'id': message_id,
+                'value': {
+                    'success': True,
+                    'channel': channel.shallow_json(),
+                }
             }))
 
     def broadcast(self, obj):

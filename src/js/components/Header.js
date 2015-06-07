@@ -53,7 +53,7 @@ export default class Header extends Component {
               </h2>
           </div>
           {allowSignOut ?
-            <a id="details_toggle" onClick={this.handleLeaveChannel} title="Leave Channel" className="flexpane_toggle_button"><i className="ts_icon ts_icon_times"></i></a>
+            <a id="details_toggle" onClick={() => { this.handleLeaveChannel(); }} title="Leave Channel" className="flexpane_toggle_button"><i className="ts_icon ts_icon_times"></i></a>
           : null}
           <a id="flex_menu_toggle" onClick={() => { this.handleSignOut(); }} title="Sign Out" className="flexpane_toggle_button normal"><i className="ts_icon ts_icon ts_icon_sign_out"></i><span className="help_icon_icon" id="help_icon_circle_count">0</span></a>
       </div>

@@ -23,10 +23,6 @@ export default class LoginPage extends Component {
     }
   }
 
-  static willTransitionFrom = (transition, component) => {
-    console.log('[login] transition from', transition, component);
-  }
-
   componentDidMount () {
     this.setState(AuthStore.getAuthenticationState());
     AuthStore.addChangeListener(() => { this.onUserChange(); });

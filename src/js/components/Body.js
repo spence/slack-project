@@ -5,12 +5,17 @@ import Actions from '../actions/ActionCreators';
 
 export default class Body extends Component {
 
+  constructor() {
+    super();
+    this.onChatEvent = this.onChatEvent.bind(this);
+  }
+
   componentDidMount () {
-    ChatStore.addChangeListener(() => { this.onChatEvent(); });
+    ChatStore.addChangeListener(this.onChatEvent);
   }
 
   componentWillUnmount () {
-    ChatStore.removeChangeListener(() => { this.onChatEvent(); });
+    ChatStore.removeChangeListener(this.onChatEvent);
   }
 
   onChatEvent() {
@@ -23,6 +28,12 @@ export default class Body extends Component {
 
   onClickCreateChannel() {
     Actions.openCreateChannelModel();
+  }
+
+  changeChannel(e, channel_key) {
+    e.stopPropagation();
+    e.preventDefault();
+    Actions.changeChannel(channel_key);
   }
 
   render () {
@@ -49,11 +60,13 @@ export default class Body extends Component {
                                           <span className="channel_list_header_label" data-toggle="tooltip" title="" data-original-title="Browse all channels">Channels</span>
                                       </h2>
                                       <ul id="channel-list">
-                                        {this.props.channelList.map(function(channel, i) {
+                                        {this.props.channelList.map((channel) => {
                                           if (channel.private || channel.direct) return null;
+                                          var activeClass = this.props.channel.key == channel.key ? 'active' : '';
                                           return (
-                                            <li className="channel" key={channel.key}>
-                                                <a className="channel_name" data-channel-id={channel.key}>
+                                            <li className={'channel ' + activeClass} key={channel.key}>
+                                                <a className="channel_name" data-channel-id={channel.key}
+                                                   onClick={(e) => { this.changeChannel(e, channel.key); }}>
                                                     <span className="unread_just hidden">0</span>
                                                     <span className="unread_highlight hidden">0</span>
                                                     <span className="overflow_ellipsis">
@@ -70,11 +83,13 @@ export default class Body extends Component {
                                       <span id="new_dm_btn" className="ts_icon ts_icon_plus_circle channels_list_new_btn" data-toggle="tooltip" title="" data-original-title="Open a Direct Message"></span>
                                       <h2 id="direct_messages_header" className="hoverable" data-toggle="tooltip" title="" data-original-title="Open a Direct Message">Direct Messages</h2>
                                       <ul id="im-list">
-                                        {this.props.channelList.map(function(channel, i) {
+                                        {this.props.channelList.map((channel) => {
                                           if (channel.private || !channel.direct) return null;
+                                          var activeClass = this.props.channel.key == channel.key ? 'active' : '';
                                           return (
-                                            <li className="member cursor_pointer" key={channel.key}>
-                                                <a className="im_name nuc" data-member-id={channel.key}>
+                                            <li className={'member cursor_pointer ' + activeClass} key={channel.key}>
+                                                <a className="im_name nuc" data-member-id={channel.key}
+                                                   onClick={(e) => { this.changeChannel(e, channel.key); }}>
                                                     <i className="ts_icon ts_icon_times_circle im_close"></i>
                                                     <span className="unread_highlight hidden">0</span>
                                                     <span className="typing_indicator"></span>
@@ -94,11 +109,13 @@ export default class Body extends Component {
                                       <span id="new_pg_btn" className="ts_icon ts_icon_plus_circle channels_list_new_btn" data-toggle="tooltip" title="" data-original-title="Create new group"></span>
                                       <h2 id="groups_header" className="hoverable"><span className="channel_list_header_label" data-toggle="tooltip" title="" data-original-title="Browse your groups">Private Groups</span></h2>
                                       <ul id="group-list">
-                                        {this.props.channelList.map(function(channel, i) {
+                                        {this.props.channelList.map((channel) => {
                                           if (!channel.private || channel.direct) return null;
+                                          var activeClass = this.props.channel.key == channel.key ? 'active' : '';
                                           return (
-                                            <li className="group cursor_pointer" key={channel.key}>
-                                                <a className="group_name" data-group-id={channel.key}>
+                                            <li className={'group cursor_pointer ' + activeClass} key={channel.key}>
+                                                <a className="group_name" data-group-id={channel.key}
+                                                   onClick={(e) => { this.changeChannel(e, channel.key); }}>
                                                     <i className="ts_icon ts_icon_times_circle group_close"></i>
                                                     <span className="unread_just hidden">0</span>
                                                     <span className="unread_highlight hidden">0</span>

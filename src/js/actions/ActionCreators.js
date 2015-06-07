@@ -43,6 +43,15 @@ export default {
     });
   },
 
+  createChannel(name, description, isPrivate) {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.CREATE_CHANNEL,
+      name: name,
+      description: description,
+      isPrivate: isPrivate
+    });
+  },
+
   signOut() {
     Dispatcher.dispatch({
       actionType: Constants.ActionTypes.SIGN_OUT
@@ -51,7 +60,15 @@ export default {
 
   leaveChannel(channel_key) {
     Dispatcher.dispatch({
-      actionType: Constants.ActionTypes.LEAVE_CHANNEL
+      actionType: Constants.ActionTypes.LEAVE_CHANNEL,
+      channel_key: channel_key
+    });
+  },
+
+  changeChannel(channel_key) {
+    Dispatcher.dispatch({
+      actionType: Constants.ActionTypes.CHANGE_CHANNEL,
+      channel_key: channel_key
     });
   }
 

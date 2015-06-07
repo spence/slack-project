@@ -3,6 +3,8 @@ import BaseStore from './BaseStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 import Constants from '../constants/Constants';
 import WebSocketRPC from '../utils/WebSocketRPC';
+import Actions from '../actions/ActionCreators';
+import RandomKey from '../utils/RandomKey';
 
 const DEFAULT_CHANNEL = 'general';
 
@@ -25,6 +27,8 @@ let _showCreateChannelModal = false;
 
 let _rebuildChannelTimer = null;
 
+let _createChannelState = {};
+
 let loadChannel = () => {
 
   rpc.send('get-current-user', [], (user) => {
@@ -39,7 +43,9 @@ let loadChannel = () => {
     chatStore.emitChange();
   });
 
-  rpc.send('get-channel-list', [], (channelList) => {
+  // Since we haven't implemented looking up and joinin a channel by name,
+  // we're just fetching all channels that the user has access to.
+  rpc.send('get-all-channel-list', [], (channelList) => {
     console.log('channel-list', channelList);
     _channelListReturned = true;
     _channelList = channelList;
@@ -48,7 +54,7 @@ let loadChannel = () => {
       _loaded = true;
     }
     _channelList.map(function(channel) {
-      _channelDict[channel.name] = channel;
+      _channelDict[channel.key] = channel;
     })
     chatStore.emitChange();
   });
@@ -90,6 +96,36 @@ rpc.on('server:message', (data) => {
     _channel.messages.push(data.message);
   }
   _userDict[data.user.key] = data.user;
+  chatStore.emitChange();
+});
+
+rpc.on('server:enter', (data) => {
+  console.log('broadcast enter', data);
+  if (data.channel.name == _channel.name) {
+    _channel.messages.push({
+      'key': RandomKey.generate(),
+      'channel_key': data.channel.key,
+      'user_key': data.user.key,
+      'content': 'joined #' + data.channel.name,
+      'ephemeral': true,
+      'ts': new Date(),
+    });
+  }
+  chatStore.emitChange();
+});
+
+rpc.on('server:leave', (data) => {
+  console.log('broadcast leave', data);
+  if (data.channel.name == _channel.name) {
+    _channel.messages.push({
+      'key': RandomKey.generate(),
+      'channel_key': data.channel.key,
+      'user_key': data.user.key,
+      'content': 'left #' + data.channel.name,
+      'ephemeral': true,
+      'ts': new Date(),
+    });
+  }
   chatStore.emitChange();
 });
 
@@ -268,6 +304,10 @@ let chatStore = new class ChatStore extends BaseStore {
     return _showCreateChannelModal;
   }
 
+  getCreateChannelState() {
+    return _createChannelState;
+  }
+
   register (action) {
     switch (action.actionType) {
       case Constants.ActionTypes.CONNECT_CHAT:
@@ -282,8 +322,8 @@ let chatStore = new class ChatStore extends BaseStore {
           chatStore.emitChange();
         } else {
           // Fetch them
-          if (! user.key in _userRequested) {
-            _userRequested[user.key] = true;
+          if (! action.user_key in _userRequested) {
+            _userRequested[action.user_key] = true;
             rpc.send('get-user', [action.user_key], (user) => {
               _userDict[user.key] = user;
               delete _userRequested[user.key];
@@ -311,9 +351,59 @@ let chatStore = new class ChatStore extends BaseStore {
         _loaded = false;
         break;
       case Constants.ActionTypes.LEAVE_CHANNEL:
-        console.log('TODO: leave channel');
+        if (action.channel_key in _channelDict) {
+          rpc.send('leave-channel', [action.channel_key], (resp) => {
+            if (resp.success) {
+              _channel = {messages: [], users: []};
+              _loaded = false;
+              loadChannel();
+            }
+          });
+        }
+        break;
+      case Constants.ActionTypes.CREATE_CHANNEL:
+        rpc.send('create-channel', [action.name, action.description, action.isPrivate], (resp) => {
+          _createChannelState = resp;
+          if (resp.success) {
+            var channel = resp.channel;
+            channel.messages = [];
+            channel.users = [_user];
+            _channelList.push(channel);
+            _channelDict[channel.key] = channel;
+            _channel = channel;
+            Actions.closeCreateChannelModel();
+            chatStore.emitChange();
+          } else {
+            chatStore.emitCreateChannelChange();
+          }
+        });
+        break;
+      case Constants.ActionTypes.CHANGE_CHANNEL:
+        if (action.channel_key in _channelDict) {
+          rpc.send('enter-channel', [action.channel_key], (resp) => {
+            if (resp.success) {
+              _channel = _channelDict[action.channel_key];
+              _channel.messages = _channel.messages || [];
+              _channel.users = _channel.users || [];
+              _loaded = false;
+              loadChannel();
+            }
+          })
+        }
         break;
     }
+  }
+
+  emitCreateChannelChange () {
+    this.emit(Constants.CREATE_CHANNEL_EVENT);
+  }
+
+  addCreateChannelChangeListener (callback) {
+    this.on(Constants.CREATE_CHANNEL_EVENT, callback);
+  }
+
+  removeCreateChannelChangeListener (callback) {
+    this.removeListener(Constants.CREATE_CHANNEL_EVENT, callback);
   }
 
 }

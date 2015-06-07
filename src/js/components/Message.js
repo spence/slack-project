@@ -4,15 +4,22 @@ import Actions from '../actions/ActionCreators';
 
 export default class Header extends Component {
 
+  constructor() {
+    super();
+    this.onChatEvent = this.onChatEvent.bind(this);
+  }
+
   state = { user: {} }
 
   componentDidMount () {
-    ChatStore.addChangeListener(() => { this.onChatEvent(); });
-    Actions.loadUser(this.props.message.user_key);
+    ChatStore.addChangeListener(this.onChatEvent);
+    if (!this.props.message.user) {
+      Actions.loadUser(this.props.message.user_key);
+    }
   }
 
   componentWillUnmount () {
-    ChatStore.removeChangeListener(() => { this.onChatEvent(); });
+    ChatStore.removeChangeListener(this.onChatEvent);
   }
 
   onChatEvent() {
@@ -28,7 +35,7 @@ export default class Header extends Component {
     var bg = 'url(\'' + (this.state.user.image_url || 'about:blank') + '\')';
     // add "joined" to class for events
     return (
-      <div className="message show_user avatar first divider">
+      <div className={'message show_user avatar first divider ' + (this.props.message.ephemeral ? 'joined' : '')}>
           <a className="member_preview_link member_image thumb_36" data-member-id={this.props.message.user_key} data-thumb-size="36" style={{backgroundImage: bg}} aria-hidden="true"></a>
           <i className="copy_only"><br/></i>
           <a className="message_sender member" data-member-id={this.props.message.user_key}> {this.state.user.name}</a><i className="copy_only"></i>
