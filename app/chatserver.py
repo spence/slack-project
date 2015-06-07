@@ -99,9 +99,6 @@ class SlackChatServer(WebSocketApplication):
         user.last_online = datetime.datetime.utcnow()
         db.session.commit()
 
-        print "user: {}".format(user.auth_id)
-        print repr(message)
-
         # Handle heartbeat
         if message == 'HB':
             self.ws.send('HB')
@@ -116,8 +113,6 @@ class SlackChatServer(WebSocketApplication):
                 'error': True,
                 'message': 'Unable to parse request',
             }))
-
-        print repr(data)
 
         method = data.get('method')
         if method is None:
