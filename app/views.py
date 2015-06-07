@@ -22,9 +22,9 @@ def root():
     return render_template('index.html')
 
 
-@mod_root.route('/mock', methods=['GET'])
-def chat():
-    return render_template('chat.html')
+@mod_root.route('/healthcheck', methods=['GET'])
+def healthcheck():
+    return make_response('ok')
 
 
 @mod_root.route('/googleauth', methods=['POST'])
