@@ -9,8 +9,11 @@ gulp release
 
 # Tar workspace
 (cd .. &&
- tar czfh app.tar.gz --exclude="slack-project/node_modules" --exclude="slack-project/packer/artifacts" \
-                     --exclude="slack-project/src" --exclude="slack-project/.*" "slack-project" &&
+ COPYFILE_DISABLE=1 tar czfh app.tar.gz \
+    --exclude=slack-project/node_modules --exclude=slack-project/packer/artifacts \
+    --exclude=slack-project/src --exclude=slack-project/.* --exclude=slack-project/**/.* \
+    --exclude=slack-project/.pyc --exclude=slack-project/**/.pyc \
+    slack-project &&
  cp app.tar.gz slack-project/packer/artifacts/app.tar.gz)
 
 # Build AMI
