@@ -3,7 +3,9 @@ Settings file for our app.
 """
 import os
 
-DEBUG = False
+DEBUG = True
+
+LOG_FILE = '/var/log/slack-project.log'
 
 # Connection string to local MySQL
 SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@localhost/slack'.format(
