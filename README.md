@@ -4,6 +4,10 @@
 ## Running locally (Mac OSX 10.10)
 
 ```bash
+# Grab contents
+git clone https://github.com/spence/slack-project.git
+cd slack-project
+
 # Setup python env
 pip install virtualenv
 virtualenv --python=/usr/bin/python2.7 .virtualenv
