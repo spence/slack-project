@@ -2,8 +2,6 @@
 *.pyc
 node_modules/
 dist/
-certificates
 nginx-error.log
 packer/artifacts/
 .virtualenv/
-env.sh
