@@ -48,7 +48,7 @@ sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 ./run.osx.sh
 
 # Add host entry
-echo "127.0.0.0 slack.projects.spencercreasey.com"
+sudo -- sh -c "echo \"127.0.0.0 slack.projects.spencercreasey.com\" >> /etc/hosts"
 
 # Lastly, open browser to https://slack.projects.spencercreasey.com
 ```
