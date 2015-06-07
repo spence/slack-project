@@ -18,7 +18,7 @@ gulp release
 (cd packer && packer build -var "aws_access_key=$(aws configure get aws_access_key_id)" -var "aws_secret_key=$(aws configure get me.aws_secret_access_key)" ubuntu.json)
 ```
 
-Launch image via AWS console.
+Launch image via AWS console. There is no SSL termination deployed here. ELB takes care of that.
 
 # Running locally (Mac OSX 10.10)
 
