@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ChatStore from '../stores/ChatStore';
 import Actions from '../actions/ActionCreators';
 
-export default class Header extends Component {
+export default class Message extends Component {
 
   constructor() {
     super();
