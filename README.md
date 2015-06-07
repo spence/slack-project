@@ -32,14 +32,20 @@ sudo chmod 755 /usr/share/nginx/www/slack-project
 sudo nginx -s stop
 sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 
-# Start gunicorn
+# Start gunicorn (as daemon)
 ./run.osx.sh
+
+# Or to see exceptions in terminal (it blocks)
+./sever.py
 
 # Add host entry
 sudo -- sh -c "echo \"127.0.0.0 localhost.dev\" >> /etc/hosts"
 
 # Open dev site (note: https://localhost will not work)
 open 'https://localhost.dev'
+
+# Shutdown gunicorn
+pkill gunicorn
 ```
 
 ## AWS
