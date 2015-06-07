@@ -13,7 +13,7 @@ pip install -r requirements.txt
 npm install
 
 # Setup mysql db
-sudo mysql -e "CREATE DATABASE slack; GRANT ALL PRIVILEGES ON slack.* TO slackuser@localhost WITH GRANT OPTION; SET PASSWORD FOR slackuser@localhost = PASSWORD('Y4LU3ZxdMD8aL'); FLUSH PRIVILEGES;"
+sudo mysql -e "CREATE DATABASE slack; GRANT ALL PRIVILEGES ON slack.* TO $MYSQL_USER@localhost WITH GRANT OPTION; SET PASSWORD FOR $MYSQL_USER@localhost = PASSWORD('$MYSQL_PASS'); FLUSH PRIVILEGES;"
 
 # Setup www folder
 sudo mkdir -p /usr/share/nginx/www/

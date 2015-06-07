@@ -13,9 +13,6 @@ echo "mysql-server mysql-server/root_password_again password root" | sudo debcon
 sudo apt-get install -y mysql-server
 sudo apt-get install mysql-client
 
-# Setup mysql db and user
-mysql -uroot -proot -e "CREATE DATABASE slack; GRANT ALL PRIVILEGES ON slack.* TO slackuser@localhost WITH GRANT OPTION; SET PASSWORD FOR slackuser@localhost = PASSWORD('Y4LU3ZxdMD8aL'); FLUSH PRIVILEGES;"
-
 # Install nginx
 sudo apt-get install -y nginx
 
