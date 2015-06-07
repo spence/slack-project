@@ -39,7 +39,7 @@ sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 ./sever.py
 
 # Add host entry
-sudo -- sh -c "echo \"127.0.0.0 localhost.dev\" >> /etc/hosts"
+sudo -- sh -c "echo \"127.0.0.1 localhost.dev\" >> /etc/hosts"
 
 # Open dev site (note: https://localhost will not work)
 open 'https://localhost.dev'
