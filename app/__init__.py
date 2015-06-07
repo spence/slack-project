@@ -24,3 +24,4 @@ db.create_all()
 # Add default data
 from models import init_db
 init_db()
+

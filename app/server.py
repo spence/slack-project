@@ -8,15 +8,16 @@ complicated app, I'm leaving them.
 
 from app import app
 from app.chatserver import SlackChatServer
-from geventwebsocket import WebSocketServer, Resource
+from geventwebsocket import Resource
 
-WebSocketServer(
 
-    ('0.0.0.0', 8000),
+resource = Resource({
+    '^/chat/': SlackChatServer,
+    '^/.*': app
+})
 
-    Resource({
-        '^/chat/': SlackChatServer,
-        '^/.*': app
-    }),
 
-).serve_forever()
+if __name__ == '__main__':
+    # Run server directly
+    from geventwebsocket import WebSocketServer
+    WebSocketServer(('0.0.0.0', 8000), resource).serve_forever()
