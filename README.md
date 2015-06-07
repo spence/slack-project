@@ -4,24 +4,27 @@
 ## Running locally (Mac OSX 10.10)
 
 ```bash
-# Install dependencies
-brew install node mysql nginx
+# Setup python env
 pip install virtualenv
 virtualenv --python=/usr/bin/python2.7 .virtualenv
 source .virtualenv/bin/activate
 pip install -r requirements.txt
-npm install
 
-# Setup mysql db
+# Build react frontend
+brew install node
+npm install
+gulp release
+
+# Install mysql and init db & user
+brew install mysql
+source env.sh # Grab creds that app will use
 sudo mysql -e "CREATE DATABASE slack; GRANT ALL PRIVILEGES ON slack.* TO $MYSQL_USER@localhost WITH GRANT OPTION; SET PASSWORD FOR $MYSQL_USER@localhost = PASSWORD('$MYSQL_PASS'); FLUSH PRIVILEGES;"
 
-# Setup www folder
-sudo mkdir -p /usr/share/nginx/www/
+# Setup NGINX
+brew install nginx
+sudo mkdir -p /usr/share/nginx/www/ /var/log/nginx/
 sudo ln -s $PWD /usr/share/nginx/www/slack-project
 sudo chmod 755 /usr/share/nginx/www/slack-project
-
-# Start nginx
-sudo mkdir -p /var/log/nginx/
 sudo nginx -s stop
 sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 
@@ -30,12 +33,10 @@ sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 
 # Add host entry
 sudo -- sh -c "echo \"127.0.0.0 localhost.dev\" >> /etc/hosts"
+
+# Open dev site (note: https://localhost will not work)
+open 'https://localhost.dev'
 ```
-
-Lastly, open browser to [https://localhost.dev](https://localhost.dev)
-
-NOTE: [https://localhost.dev](https://localhost.dev) is NOT supported.
-
 
 ## AWS
 
