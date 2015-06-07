@@ -1,14 +1,13 @@
 var babelify = require('babelify');
 var browserify = require('browserify');
+var buffer = require('vinyl-buffer');
 var concat = require('gulp-concat');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var sass = require('gulp-sass');
 var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
-var watch = require('gulp-watch');
 var watchify = require('watchify');
+var rimraf = require('rimraf');
 
 var conf = {
   JS_ENTRY: './src/js/entry.js',
@@ -24,6 +23,10 @@ gulp.task('watch', function() {
   gulp.watch(conf.CSS_PATTERN, ['css']);
 });
 
+gulp.task('clean', function (cb) {
+  rimraf(conf.STATIC_DIR, cb);
+});
+
 gulp.task('static', function() {
   return gulp.src(conf.ASSET_PATTERN)
   .pipe(gulp.dest(conf.STATIC_DIR));
@@ -35,7 +38,7 @@ gulp.task('css', function () {
   .pipe(gulp.dest(conf.STATIC_DIR));
 });
 
-gulp.task('build', function() {
+gulp.task('build-dev', function() {
     var bundler = browserify({
         entries: [conf.JS_ENTRY],
         transform: [babelify],
@@ -49,20 +52,36 @@ gulp.task('build', function() {
           console.log('Updating: ', arguments);
           watcher.bundle()
             .pipe(source(conf.JS_BUNDLE))
-            // .pipe(buffer())
-            // .pipe(uglify())
             .pipe(gulp.dest(conf.STATIC_DIR));
       })
       .bundle()
       .pipe(source(conf.JS_BUNDLE))
-      // .pipe(buffer())
-      // .pipe(uglify())
       .pipe(gulp.dest(conf.STATIC_DIR));
+});
+
+gulp.task('build-prod', function() {
+  return browserify({
+      entries: [conf.JS_ENTRY],
+      transform: [babelify],
+      debug: false
+    })
+    .bundle()
+    .pipe(source(conf.JS_BUNDLE))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest(conf.STATIC_DIR));
 });
 
 gulp.task('default', [
   'static',
-  'build',
+  'build-dev',
   'css',
   'watch'
+]);
+
+gulp.task('release', [
+  'clean',
+  'build-prod',
+  'static',
+  'css'
 ]);
