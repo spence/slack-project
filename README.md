@@ -1,7 +1,7 @@
 
-## Chat Application (UI ripped from Slack)
+# Chat Application (UI ripped from Slack)
 
-# Running locally (Mac OSX 10.10)
+## Running locally (Mac OSX 10.10)
 
 ```bash
 # Install dependencies
@@ -35,7 +35,7 @@ sudo -- sh -c "echo \"127.0.0.0 localhost.dev\" >> /etc/hosts"
 # NOTE: [https://localhost.dev](https://localhost.dev) is NOT supported.
 ```
 
-# AWS
+## AWS
 
 Build AWS AMI
 ```bash
