@@ -17,7 +17,7 @@ pip install -r requirements.txt
 # Build react frontend
 brew install node
 npm install
-gulp release
+gulp release # Use `gulp` for dev w/ watcher
 
 # Install mysql and init db & user
 brew install mysql
