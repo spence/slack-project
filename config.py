@@ -5,8 +5,6 @@ import os
 
 DEBUG = True
 
-LOG_FILE = '/var/log/slack-project.log'
-
 # Connection string to local MySQL
 SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://{}:{}@localhost/slack'.format(
     os.environ['MYSQL_USER'], os.environ['MYSQL_PASS'])
