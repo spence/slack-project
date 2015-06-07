@@ -19,7 +19,7 @@ def init_db():
             bot=True,
             name='Slack Bot',
             email='screasey@gmail.com',
-            image_url='https://{}/static/images/slackbot_48.png'.format(app.config['AUTH_DOMAIN'])
+            image_url='/static/images/slackbot_48.png'
         )
         db.session.add(slackbot)
         general_channel = Channel(
