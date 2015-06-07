@@ -23,8 +23,8 @@ gulp.task('watch', function() {
   gulp.watch(conf.CSS_PATTERN, ['css']);
 });
 
-gulp.task('clean', function (cb) {
-  rimraf(conf.STATIC_DIR, cb);
+gulp.task('clean', function () {
+  rimraf.sync(conf.STATIC_DIR);
 });
 
 gulp.task('static', function() {
