@@ -30,10 +30,12 @@ sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 
 # Add host entry
 sudo -- sh -c "echo \"127.0.0.0 localhost.dev\" >> /etc/hosts"
-
-# Lastly, open browser to [https://localhost.dev](https://localhost.dev)`
-# NOTE: [https://localhost.dev](https://localhost.dev) is NOT supported.
 ```
+
+Lastly, open browser to [https://localhost.dev](https://localhost.dev)
+
+NOTE: [https://localhost.dev](https://localhost.dev) is NOT supported.
+
 
 ## AWS
 
