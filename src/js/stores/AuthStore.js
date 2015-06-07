@@ -3,6 +3,11 @@ import BaseStore from './BaseStore';
 import Dispatcher from '../dispatcher/Dispatcher';
 import Constants from '../constants/Constants';
 
+const AUTH_DOMAINS = {
+  'localhost.dev': true,
+  'slack.projects.spencercreasey.com': true
+}
+
 let _authToken = null;
 let _loading = true; // page starts as loading
 let _error = false;
@@ -32,6 +37,7 @@ let _authenticateUser = (authStore) => {
       dataType: 'json',
       data: user,
       contentType: 'application/x-www-form-urlencoded',
+      headers: {'X-CSRFToken': $('meta[name=csrf-token]').attr('content')},
       success (response) {
         _loading = false;
         // Validate & update state
@@ -87,13 +93,17 @@ let authStore = new class AuthStore extends BaseStore {
     _authToken = null;
     _loading = false;
     _error = false;
-    document.cookie = 'auth_token=0; domain=.slack.projects.spencercreasey.com; path=/; secure; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    var domain = window.location.hostname;
+    document.cookie = 'auth_token=0; domain=' + domain + '; path=/; secure; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
 
   upgradeAuthToken(authToken) {
     _authToken = authToken;
-    // Set cookie (dont worry about expires for now -- server handles that)
-    document.cookie = 'auth_token=' + authToken + '; domain=.slack.projects.spencercreasey.com; path=/; secure;'
+    // Set cookie for valid domains (server handles token expiration)
+    var domain = window.location.hostname;
+    if (AUTH_DOMAINS[domain]) {
+      document.cookie = 'auth_token=' + authToken + '; domain=' + domain + '; path=/; secure;';
+    }
   }
 
 }

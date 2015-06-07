@@ -8,7 +8,8 @@ import RandomKey from '../utils/RandomKey';
 
 const DEFAULT_CHANNEL = 'general';
 
-let rpc = new WebSocketRPC('wss://slack.projects.spencercreasey.com/chat/');
+let domain = window.location.hostname;
+let rpc = new WebSocketRPC('wss://' + domain + '/chat/');
 
 let _user = {};
 let _channel = {messages: [], users: []};

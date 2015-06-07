@@ -39,14 +39,14 @@ def gauth_signin():
         email = request.form.get('email')
         name = request.form.get('name')
         image_url = request.form.get('image_url', 'https://ssl.webpack.de/lorempixel.com/96/96/cats/')
+        domain = request.headers.get('Host')
         idinfo = client.verify_id_token(id_token, app.config['GAUTH_CLIENT_ID'])
-        # If multiple clients access the backend server:
         if idinfo['aud'] != app.config['GAUTH_CLIENT_ID']:
             raise crypt.AppIdentityError("Unrecognized client.")
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise crypt.AppIdentityError("Wrong issuer.")
-        if request.environ['HTTP_ORIGIN'] != app.config['AUTH_ORIGIN']:
-            raise crypt.AppIdentityError("Wrong origin.")
+        if domain not in app.config['AUTH_DOMAINS']:
+            raise crypt.AppIdentityError("Wrong origin. {}".format(domain))
         if auth_id != idinfo['sub']:
             raise crypt.AppIdentityError("User IDs do not match.")
     except crypt.AppIdentityError as exception:
@@ -92,7 +92,9 @@ def gauth_signin():
     # Store session cookie so use does not need to refetch this
     expiration_seconds = app.config['AUTH_TOKEN_SECONDS']
     response = make_response(json.jsonify(status='success', auth_id=auth_id, auth_token=auth_token))
+
+    # Check host to determine where to set cookie
     response.set_cookie(key='auth_token', value=auth_token, secure=True, path='/',
-                        domain=app.config['AUTH_DOMAIN'], max_age=expiration_seconds)
+                        domain=domain, max_age=expiration_seconds)
 
     return response

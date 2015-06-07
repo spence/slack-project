@@ -52,7 +52,7 @@ export default class LoginPage extends Component {
     return (
       <div className="login">
         <header>
-          <a href="https://slack.projects.spencercreasey.com/" id="header_logo"><img src="/static/images/not_slack_logo.png" /></a>
+          <a href="/" id="header_logo"><img src="/static/images/not_slack_logo.png" /></a>
           <div className="header_nav">
             <div className="header_links float_right">
               <a href="http://spencercreasey.com" target="new">Blog</a>

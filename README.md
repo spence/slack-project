@@ -57,7 +57,8 @@ sudo nginx -c /usr/share/nginx/www/slack-project/nginx.osx.conf
 ./run.osx.sh
 
 # Add host entry
-sudo -- sh -c "echo \"127.0.0.0 slack.projects.spencercreasey.com\" >> /etc/hosts"
+sudo -- sh -c "echo \"127.0.0.0 localhost.dev\" >> /etc/hosts"
 
-# Lastly, open browser to https://slack.projects.spencercreasey.com
+# Lastly, open browser to [https://localhost.dev](https://localhost.dev)`
+# NOTE: [https://localhost.dev](https://localhost.dev) is NOT supported.
 ```

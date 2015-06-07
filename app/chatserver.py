@@ -65,7 +65,7 @@ class SlackChatServer(WebSocketApplication):
 
         # Validate origin
         origin = self.ws.origin
-        if origin != app.config['AUTH_ORIGIN']:
+        if origin not in app.config['AUTH_ORIGIN']:
             self.on_close('invalid origin: {}'.format(origin))
             self.ws.close()
             return
