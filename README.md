@@ -22,7 +22,12 @@ gulp release # Use `gulp` for dev w/ watcher
 # Install mysql and init db & user
 brew install mysql
 source env.sh # Grab creds that app will use
-sudo mysql -e "CREATE DATABASE slack; GRANT ALL PRIVILEGES ON slack.* TO $MYSQL_USER@localhost WITH GRANT OPTION; SET PASSWORD FOR $MYSQL_USER@localhost = PASSWORD('$MYSQL_PASS'); FLUSH PRIVILEGES;"
+cat << EOF | sudo mysql
+CREATE DATABASE slack;
+GRANT ALL PRIVILEGES ON slack.* TO $MYSQL_USER@localhost WITH GRANT OPTION;
+SET PASSWORD FOR $MYSQL_USER@localhost = PASSWORD('$MYSQL_PASS');
+FLUSH PRIVILEGES;
+EOF
 
 # Setup NGINX
 brew install nginx
