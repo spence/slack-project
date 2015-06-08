@@ -26,11 +26,9 @@ AUTH_DOMAINS = [
     'localhost.dev',
 ]
 
-# Turn on CSRFtoken generation. We don't use forms, but someone would eventually.
-# For WS/XHR, we validate using Origin.
+# Setup CSRF
 CSRF_ENABLED = True
 CSRF_SESSION_KEY = "secret"
-# WTF_CSRF_CHECK_DEFAULT = False
 WTF_CSRF_METHODS = ['POST']
 
 # Random bits for creating session cookies
