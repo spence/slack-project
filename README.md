@@ -1,6 +1,8 @@
 
 # Chat Application (UI ripped from Slack)
 
+<img width="1051" alt="screenshot 2015-08-07 22 55 29" src="https://cloud.githubusercontent.com/assets/138762/9149272/851f13a4-3d57-11e5-85bf-291dc9f6f45f.png">
+
 ## Running locally (Mac OSX 10.10)
 
 ```bash
